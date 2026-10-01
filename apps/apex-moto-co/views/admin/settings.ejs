@@ -1,0 +1,132 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+        <h1 style="margin: 0; color: var(--primary); text-transform: uppercase; font-size: 2em; letter-spacing: 1px;">⚙️ Site Settings</h1>
+        <div style="display: flex; gap: 10px;">
+            <a href="/admin" class="btn btn-primary" style="text-decoration: none; font-size: 0.9em;">Back to Admin</a>
+        </div>
+    </div>
+
+    <div class="admin-panel" style="max-width: 900px;">
+        <form id="settingsForm" style="display: flex; flex-direction: column; gap: 25px;">
+            
+            <!-- BRANDING SECTION -->
+            <div style="border-bottom: 2px solid var(--border-color); padding-bottom: 20px;">
+                <h3 style="color: var(--warning); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-top: 0;">🏷️ Branding</h3>
+                
+                <label for="site_name">Site Name</label>
+                <input type="text" id="site_name" name="site_name" value="<%= settings.site_name || '' %>" placeholder="ApexMoto&Co" required>
+                
+                <label for="site_tagline">Site Tagline</label>
+                <input type="text" id="site_tagline" name="site_tagline" value="<%= settings.site_tagline || '' %>" placeholder="The Ultimate Motorcycle Lifestyle Hub">
+            </div>
+
+            <!-- HERO SECTION -->
+            <div style="border-bottom: 2px solid var(--border-color); padding-bottom: 20px;">
+                <h3 style="color: var(--warning); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-top: 0;">🎬 Homepage Hero</h3>
+                
+                <label for="hero_title">Hero Title</label>
+                <input type="text" id="hero_title" name="hero_title" value="<%= settings.hero_title || '' %>" placeholder="WELCOME TO APEXMOTO&CO">
+                
+                <label for="hero_subtitle">Hero Subtitle</label>
+                <input type="text" id="hero_subtitle" name="hero_subtitle" value="<%= settings.hero_subtitle || '' %>" placeholder="The Ultimate Motorcycle Lifestyle Hub">
+            </div>
+
+            <!-- ABOUT SECTIONS -->
+            <div style="border-bottom: 2px solid var(--border-color); padding-bottom: 20px;">
+                <h3 style="color: var(--warning); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-top: 0;">📝 About Sections</h3>
+                
+                <label for="about_section_1">Who We Are</label>
+                <textarea id="about_section_1" name="about_section_1" rows="4" placeholder="Tell your story..."><%= settings.about_section_1 || '' %></textarea>
+                
+                <label for="about_section_2">Our Journey</label>
+                <textarea id="about_section_2" name="about_section_2" rows="4" placeholder="Describe your journey..."><%= settings.about_section_2 || '' %></textarea>
+                
+                <label for="about_section_3">Our Mission</label>
+                <textarea id="about_section_3" name="about_section_3" rows="4" placeholder="Share your mission..."><%= settings.about_section_3 || '' %></textarea>
+            </div>
+
+            <!-- FOOTER SECTION -->
+            <div style="border-bottom: 2px solid var(--border-color); padding-bottom: 20px;">
+                <h3 style="color: var(--warning); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-top: 0;">👣 Footer</h3>
+                
+                <label for="footer_copyright">Copyright Text</label>
+                <input type="text" id="footer_copyright" name="footer_copyright" value="<%= settings.footer_copyright || '' %>" placeholder="© 2026 ApexMoto&Co. All rights reserved.">
+                
+                <label for="social_facebook">Facebook URL</label>
+                <input type="url" id="social_facebook" name="social_facebook" value="<%= settings.social_facebook || '' %>" placeholder="https://www.facebook.com">
+                
+                <label for="social_instagram">Instagram URL</label>
+                <input type="url" id="social_instagram" name="social_instagram" value="<%= settings.social_instagram || '' %>" placeholder="https://instagram.com">
+                
+                <label for="social_twitter">Twitter/X URL</label>
+                <input type="url" id="social_twitter" name="social_twitter" value="<%= settings.social_twitter || '' %>" placeholder="https://twitter.com">
+                
+                <label for="social_youtube">YouTube URL</label>
+                <input type="url" id="social_youtube" name="social_youtube" value="<%= settings.social_youtube || '' %>" placeholder="https://youtube.com">
+            </div>
+
+            <!-- LEGAL PAGES -->
+            <div style="border-bottom: 2px solid var(--border-color); padding-bottom: 20px;">
+                <h3 style="color: var(--warning); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-top: 0;">⚖️ Legal Pages</h3>
+                
+                <label for="privacy_content">Privacy Policy</label>
+                <textarea id="privacy_content" name="privacy_content" rows="5" placeholder="Enter privacy policy content..."><%= settings.privacy_content || '' %></textarea>
+                
+                <label for="terms_content">Terms & Conditions</label>
+                <textarea id="terms_content" name="terms_content" rows="5" placeholder="Enter terms & conditions..."><%= settings.terms_content || '' %></textarea>
+                
+                <label for="cookies_content">Cookie Policy</label>
+                <textarea id="cookies_content" name="cookies_content" rows="5" placeholder="Enter cookie policy content..."><%= settings.cookies_content || '' %></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.1em; text-transform: uppercase; font-weight: 800;">💾 Save All Changes</button>
+        </form>
+    </div>
+
+    <div id="statusMessage" style="display: none; margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: 600;"></div>
+</div>
+
+<script>
+document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(document.getElementById('settingsForm'));
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/admin/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            const msg = document.getElementById('statusMessage');
+            msg.style.display = 'block';
+            msg.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+            msg.style.color = '#10b981';
+            msg.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            msg.textContent = '✅ ' + (result.message || 'Settings saved successfully!');
+            
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        const msg = document.getElementById('statusMessage');
+        msg.style.display = 'block';
+        msg.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+        msg.style.color = '#ef4444';
+        msg.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+        msg.textContent = '❌ Error: ' + error.message;
+    }
+});
+</script>
+
+<%- include('../partials/footer') %>

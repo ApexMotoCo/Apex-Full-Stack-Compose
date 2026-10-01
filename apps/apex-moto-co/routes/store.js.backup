@@ -1,0 +1,67 @@
+const express = require('express');
+const router = express.Router();
+const { getAllProducts, getProductByHandle, searchProducts } = require('../services/shopify');
+
+/**
+ * Store homepage - fetch and display all products
+ */
+router.get('/', async (req, res) => {
+  try {
+    const products = await getAllProducts();
+    res.render('store', { products: products || [], error: null });
+  } catch (error) {
+    console.error('Store page error:', error.message);
+    res.render('store', { 
+      products: [],
+      error: 'Unable to load products at this time. Please try again later.'
+    });
+  }
+});
+
+/**
+ * Product detail page
+ */
+router.get('/product/:handle', async (req, res) => {
+  try {
+    const product = await getProductByHandle(req.params.handle);
+    if (!product) {
+      return res.status(404).render('error', { message: 'Product not found' });
+    }
+    res.render('store/product', { product });
+  } catch (error) {
+    console.error('Product page error:', error.message);
+    res.status(500).render('error', { message: 'Unable to load product' });
+  }
+});
+
+/**
+ * API endpoint - fetch all products (for AJAX)
+ */
+router.get('/api/products', async (req, res) => {
+  try {
+    const products = await getAllProducts();
+    res.json({ success: true, products: products || [] });
+  } catch (error) {
+    console.error('Products API error:', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * API endpoint - search products
+ */
+router.get('/api/search', async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim().length === 0) {
+      return res.json({ success: true, products: [] });
+    }
+    const products = await searchProducts(q);
+    res.json({ success: true, products: products || [] });
+  } catch (error) {
+    console.error('Search API error:', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+module.exports = router;

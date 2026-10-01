@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('../partials/header'); %>
+  <title>Activity Logs - Admin</title>
+  <style>
+    .activity-log { font-size: 0.9em; }
+    .activity-log table { width: 100%; }
+    .activity-log th { background: #0a0a0a; }
+    .activity-log td { padding: 10px; border-bottom: 1px solid #333; }
+    .activity-log tr:hover td { background: #1a1a1a; }
+    .log-action { font-weight: 700; color: #ff5500; }
+    .log-success { color: #10b981; }
+    .log-error { color: #ef4444; }
+    .log-warning { color: #ff9900; }
+    .log-timestamp { color: #9ca3af; font-size: 0.85em; }
+    .filter-controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .filter-controls input, .filter-controls select { padding: 8px; border: 1px solid #333; background: #111; color: #f3f4f6; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Activity Logs</h1>
+
+    <div class="filter-controls">
+      <input type="text" id="searchUser" placeholder="Search by user..." style="flex: 1; min-width: 200px;">
+      <select id="filterAction">
+        <option value="">All Actions</option>
+        <option value="login">Login</option>
+        <option value="logout">Logout</option>
+        <option value="create">Create</option>
+        <option value="update">Update</option>
+        <option value="delete">Delete</option>
+        <option value="export">Export</option>
+      </select>
+      <button class="btn btn-primary" onclick="exportLogs()">Export CSV</button>
+    </div>
+
+    <div class="activity-log">
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Event ID</th>
+            <th>Request ID</th>
+            <th>User</th>
+            <th>Action</th>
+            <th>Resource</th>
+            <th>Details</th>
+            <th>IP Address</th>
+          </tr>
+        </thead>
+        <tbody id="logsTable">
+          <% (logs || []).forEach(log => { %>
+            <tr>
+              <td>
+                <span class="log-timestamp"><%= new Date(log.timestamp).toLocaleString('en-GB', { timeZone: 'Europe/London' }) %></span>
+              </td>
+              <td><%= log.id %></td>
+              <td><%= log.request_id || '-' %></td>
+              <td><%= log.username || 'System' %></td>
+              <td>
+                <span class="log-action">
+                  <% 
+                    const actionClass = log.action.includes('error') ? 'log-error' : 
+                                        log.action.includes('success') ? 'log-success' : 'log-action';
+                  %>
+                  <%= log.action %>
+                </span>
+              </td>
+              <td><%= log.resource || '-' %></td>
+              <td><%= log.details || '-' %></td>
+              <td><%= log.ip_address || '-' %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <% if (!logs || logs.length === 0) { %>
+        <div style="text-align: center; padding: 40px; color: #9ca3af;">
+          No activity logs found.
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    function exportLogs() {
+      const rows = document.querySelectorAll('#logsTable tr');
+      let csv = 'Timestamp,User,Action,Resource,Details,IP Address\n';
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const data = [
+          cells[0].textContent.trim(),
+        cells[3].textContent.trim(),
+        cells[4].textContent.trim(),
+        cells[5].textContent.trim(),
+        cells[6].textContent.trim(),
+        cells[7].textContent.trim()
+        ].map(v => `"${v.replace(/"/g, '""')}"`).join(',');
+        csv += data + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `activity-logs-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('searchUser').addEventListener('keyup', filterLogs);
+    document.getElementById('filterAction').addEventListener('change', filterLogs);
+
+    function filterLogs() {
+      const searchUser = document.getElementById('searchUser').value.toLowerCase();
+      const filterAction = document.getElementById('filterAction').value;
+      const rows = document.querySelectorAll('#logsTable tr');
+
+      rows.forEach(row => {
+        const user = row.cells[3].textContent.toLowerCase();
+        const action = row.cells[4].textContent.toLowerCase();
+        const matchUser = user.includes(searchUser);
+        const matchAction = !filterAction || action.includes(filterAction.toLowerCase());
+        row.style.display = (matchUser && matchAction) ? '' : 'none';
+      });
+    }
+  </script>
+<%- include('../partials/footer'); %>

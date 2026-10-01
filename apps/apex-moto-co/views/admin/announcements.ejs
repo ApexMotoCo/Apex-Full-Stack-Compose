@@ -1,0 +1,75 @@
+<%-include('../partials/header')%>
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+        <h1 style="margin: 0; color: var(--primary); text-transform: uppercase; font-size: 2em; letter-spacing: 1px;">📣 Announcements</h1>
+        <a href="/admin" class="btn btn-warning" style="text-decoration: none;">← Back to Dashboard</a>
+    </div>
+
+    <div class="admin-panel" style="margin-bottom: 40px;">
+        <h3 style="margin-top: 0; color: var(--text-main);">Create Announcement</h3>
+        <form id="ann-form">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Announcement title..." required>
+            
+            <label>Content</label>
+            <textarea name="content" placeholder="Write your announcement..." rows="5" required></textarea>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Post Announcement</button>
+        </form>
+    </div>
+
+    <div class="admin-panel">
+        <h3 style="margin-top: 0; color: var(--text-main);">All Announcements</h3>
+        <% if (announcements && announcements.length > 0) { %>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                <% announcements.forEach(ann => { %>
+                    <div style="background: var(--bg-main); padding: 15px; border-left: 4px solid var(--primary); border-radius: 4px; display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0; color: var(--text-main);"><%= ann.title %></h4>
+                            <p style="margin: 0 0 8px 0; color: var(--text-muted); font-size: 0.9em;"><%= ann.content %></p>
+                            <p style="margin: 0; font-size: 0.85em; color: var(--text-muted);">By <strong><%= ann.author %></strong> • <%= new Date(ann.created_at).toLocaleDateString() %></p>
+                        </div>
+                        <button class="btn-icon btn-delete" onclick="deleteAnn(<%= ann.id %>)" style="padding: 6px 12px; white-space: nowrap;">Delete</button>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p style="text-align: center; color: var(--text-muted);">No announcements yet.</p>
+        <% } %>
+    </div>
+</div>
+
+<script>
+document.getElementById('ann-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+
+    const response = await fetch('/admin/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('Announcement posted!');
+        location.reload();
+    } else {
+        alert('Error posting announcement');
+    }
+});
+
+async function deleteAnn(id) {
+    if (!confirm('Delete this announcement?')) return;
+    
+    const response = await fetch(`/admin/announcements/${id}`, { method: 'DELETE' });
+    if (response.ok) {
+        location.reload();
+    } else {
+        alert('Error deleting announcement');
+    }
+}
+</script>
+
+<%-include('../partials/footer')%>

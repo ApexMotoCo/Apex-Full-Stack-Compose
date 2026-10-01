@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: apex-moto-co-web
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      SHOPIFY_STORE_URL: ${SHOPIFY_STORE_URL}
+      SHOPIFY_ACCESS_TOKEN: ${SHOPIFY_ACCESS_TOKEN}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET}
+      WORKSHOP_AUTH_SECRET: ${WORKSHOP_AUTH_SECRET}
+      ADMIN_EMAIL_1: ${ADMIN_EMAIL_1}
+      ADMIN_PASSWORD_1: ${ADMIN_PASSWORD_1}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - app-network
+      - apex-shared
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: apex-moto-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - C:/letsencrypt:/etc/letsencrypt:ro
+      - ./certbot-webroot:/var/www/certbot:rw
+      - ./public:/moto-co/public:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+    networks:
+      - app-network
+      - apex-shared
+
+networks:
+  app-network:
+    driver: bridge
+  apex-shared:
+    external: true

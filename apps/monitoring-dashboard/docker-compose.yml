@@ -1,0 +1,31 @@
+services:
+  apex-monitoring-dashboard:
+    build: .
+    image: apex-monitoring-dashboard:latest
+    container_name: apex-monitoring-dashboard
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      # Set a long random value in a .env file next to this compose file:
+      #   JWT_SECRET=<long random string>
+      - JWT_SECRET=${JWT_SECRET:-change-me-please-set-a-real-secret}
+    volumes:
+      - monitoring_data:/data
+    networks:
+      - apex-shared
+
+volumes:
+  monitoring_data:
+    # Reuse the existing volume so the user accounts are kept.
+    # If it doesn't exist yet, remove the next two lines and compose will create it.
+    external: true
+    name: monitoring_data
+
+networks:
+  apex-shared:
+    # Shared network the website / asset services are on
+    external: true
+    name: apex-shared

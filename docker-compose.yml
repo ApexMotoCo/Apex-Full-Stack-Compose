@@ -1,0 +1,141 @@
+services:
+
+  # ============================================================
+  # APEX MOTO & CO WEBSITE
+  # ============================================================
+  apex-moto-co-web:
+    build:
+      context: ./apps/apex-moto-co
+      dockerfile: Dockerfile
+    container_name: apex-moto-co-web
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ./apps/apex-moto-co/data:/app/data
+    restart: unless-stopped
+    networks:
+      - apex-shared
+
+
+  # ============================================================
+  # APEX MONITORING DASHBOARD
+  # ============================================================
+  apex-monitoring-dashboard:
+    build:
+      context: ./apps/monitoring-dashboard
+      dockerfile: Dockerfile
+    container_name: apex-monitoring-dashboard
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - dashboard_data:/data
+    restart: unless-stopped
+    networks:
+      - apex-shared
+
+
+  # ============================================================
+  # APEX ASSET MANAGEMENT BACKEND
+  # ============================================================
+  asset-management-backend:
+    build:
+      context: ./apps/asset-management/backend
+      dockerfile: Dockerfile
+    container_name: asset-management-backend
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ./apps/asset-management/backend:/app
+      - /backend_data:/data
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+    networks:
+      - apex-shared
+
+
+  # ============================================================
+  # APEX ASSET MANAGEMENT FRONTEND
+  # ============================================================
+  apex-frontend:
+    build:
+      context: ./apps/asset-management/frontend
+      dockerfile: Dockerfile
+    container_name: apex-frontend
+    ports:
+      - "3001:3000"
+    restart: unless-stopped
+    networks:
+      - apex-shared
+
+
+  # ============================================================
+  # APEX OPENVPN
+  # ============================================================
+  apex-openvpn:
+    image: openvpn/openvpn-as:latest
+    container_name: apex-openvpn
+    ports:
+      - "943:943"
+      - "1194:1194/udp"
+      - "8443:443"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - OPENVPN_ADMIN_USERNAME=${OPENVPN_ADMIN_USERNAME}
+      - OPENVPN_ADMIN_PASSWORD=${OPENVPN_ADMIN_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - apex-shared
+    volumes:
+      - openvpn_data:/etc/openvpn
+
+
+  # ============================================================
+  # APEX NGINX REVERSE PROXY
+  # ============================================================
+  nginx:
+    image: nginx:alpine
+    container_name: apex-moto-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - C:/letsencrypt:/etc/letsencrypt:ro
+      - ./apps/apex-moto-co/public:/moto-co/public:ro
+      - ./apps/monitoring-dashboard/public:/dashboard-public:ro
+      - ./apps/apex-moto-co/certbot-webroot:/var/www/certbot:rw
+    depends_on:
+      - apex-moto-co-web
+      - apex-monitoring-dashboard
+      - asset-management-backend
+      - apex-frontend
+      - apex-openvpn
+    restart: unless-stopped
+    networks:
+      - apex-shared
+
+
+# ==============================================================
+# NETWORK
+# ==============================================================
+networks:
+  apex-shared:
+    driver: bridge
+
+
+# ==============================================================
+# PERSISTENT DOCKER VOLUMES
+# ==============================================================
+volumes:
+  dashboard_data:
+    driver: local
+
+  openvpn_data:
+    driver: local

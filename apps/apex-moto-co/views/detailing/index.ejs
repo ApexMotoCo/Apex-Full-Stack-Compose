@@ -1,0 +1,521 @@
+<%- include('../partials/header') %>
+
+<style>
+/* Utility classes used on this page (not defined in the site stylesheet) */
+.detailing-page .py-5 { padding: 56px 0; }
+.detailing-page .text-center { text-align: center; }
+.detailing-page .mb-4 { margin-bottom: 24px; }
+.detailing-page .mb-5 { margin-bottom: 32px; }
+/* Sections handle their own spacing, so don't stack the container's 40px margin on top */
+.detailing-page section .container { margin-top: 0; margin-bottom: 0; }
+@media (max-width: 768px) { .detailing-page .py-5 { padding: 36px 0; } }
+</style>
+
+<main class="detailing-page">
+    <!-- Hero Section -->
+    <section class="hero" style="min-height: clamp(340px, 50vh, 520px); display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(255,85,0,0.15) 0%, rgba(5,5,5,0) 60%); z-index: -1;"></div>
+        
+        <div class="container">
+            <h1 style="display: block !important; width: 100% !important; max-width: none !important; margin-left: auto !important; margin-right: auto !important; text-align: center !important; text-transform: uppercase; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,85,0,0.8), 0 0 20px rgba(255,85,0,0.5);">
+                <span style="color: #fff;">Apex Moto</span> <span style="color: #ff5500;">Detailing</span>
+            </h1>
+            
+            <p style="font-size: 1.5rem; color: var(--text-muted); margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Premium Vehicle Care & Protection
+            </p>
+
+            <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                The Ultimate Care System & Ceramic Maintenance.<br>
+                Uncompromising multi-stage cleaning, precision detailing, and heavy-duty weather defence.
+            </p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <h2 class="mb-5" style="text-align: center; text-transform: uppercase; letter-spacing: 1px;">About Apex Moto Detailing</h2>
+            <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; margin-top: 0;">
+                    Welcome to <strong style="color: #ff5500;">Apex Moto Detailing</strong>, a proud part of the <strong style="color: #fff;">Apex Moto & Co.</strong> family. We specialize in premium vehicle detailing for motorcycles, cars, and other vehicles.
+                </p>
+                
+                <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8;">
+                    Our journey began with a passion for motorcycles and automotive excellence. What started as a tight-knit group of enthusiasts has evolved into a professional detailing service committed to providing uncompromising multi-stage cleaning, precision detailing, and heavy-duty weather defence.
+                </p>
+                
+                <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 0;">
+                    Today, we provide our community with premium care for their motorcycles and cars. We are constantly pushing the redline. Our goal is to become the ultimate lifestyle hub for enthusiasts. Fully transparent, highly meticulous, and driven by real connections. Welcome to the Apex family.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Form Section -->
+    <section id="booking" class="py-5" style="background-color: var(--bg-card);">
+        <div class="container">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <div class="text-center mb-4">
+                    <h2 style="color: #ff5500; margin-top: 0;">Our Treatments</h2>
+                    <p style="font-size: 1.2rem; color: var(--text-muted);">Premium Two-Wheel Care & Protection. Same-Day Return.</p>
+                </div>
+
+                <form id="bookingForm">
+                <input type="hidden" name="service_type" id="service_type">
+                <div style="max-width: 600px; margin: 0 auto 30px;">
+                    <label style="color: #ff5500; font-weight: bold;">Select Vehicle Type</label>
+                    <select id="vehicle_type" name="vehicle_type" style="width: 100%; padding: 12px; background-color: var(--bg-card); color: #fff; border: 1px solid #ff5500; border-radius: 8px; font-size: 1.1rem; cursor: pointer;">
+                        <option value="Motorcycle">Motorcycle</option>
+                        <option value="Car">Car</option>
+                        <option value="Other">Other Vehicles</option>
+                    </select>
+                </div>
+
+                <div id="moto_treatments">
+                    <h3 style="text-align: center; color: #ff5500; margin-bottom: 24px;">Premium Two-Wheel Care & Protection</h3>
+                
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <!-- Tier 01: Express Refresh - £35 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 01: The Express Refresh - £35" data-price="35" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 01: The Express Refresh</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£35</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li>Multi-Stage Pre-Wash: Delicate high-cling snow foam layer to gently dissolve loose dirt</li>
+                                <li>Two-Bucket Hand Wash: Scratch-free premium wash mitt process protecting your clear coat/wrap</li>
+                                <li>Intricate Blow-Dry: Heated water jet system used to force water out of switchgear & seams</li>
+                                <li>Chassis Mist: Anti-corrosion protectant lightly applied to guard sensitive metal parts</li>
+                                <li>Rider Care Package: Helmet shell detailed + visor anti-fog treatment</li>
+                            </ul>
+                        </label>
+
+                        <!-- Tier 02: Drivetrain & Deep Wash - £60 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 02: Drivetrain & Deep Wash - £60" data-price="60" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 02: Drivetrain & Deep Wash</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£60</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li><strong>Includes all Tier 1 services plus:</strong></li>
+                                <li>Full Drivetrain Overhaul: Chain completely stripped of trapped road grit, deep cleaned, dried, and perfectly re-lubed</li>
+                                <li>Deep Wheel Detailing: Intense cleanup of wheel barrels, spokes, and brake calipers to remove embedded carbon dust</li>
+                                <li>Targeted Protection: Standard anti-corrosion barrier laid down precisely over the frame, swingarm, and moving pivots</li>
+                            </ul>
+                        </label>
+
+                        <!-- Tier 03: Full Chemical Decon - £80 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 03: Full Chemical Decon - £80" data-price="80" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 03: Full Chemical Decon</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£80</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li><strong>Includes all Tier 2 services plus:</strong></li>
+                                <li>Chemical Decontamination: Complete removal of embedded industrial iron fallout, sticky road tar, and heavy bug splatters</li>
+                                <li>Engine Casing Degrease: Intensive deep cleaning of the engine block, cooling fins, and lower shock areas to break down grease layers</li>
+                                <li>Gloss Spray Sealant: Hydrophobic protective coat applied to painted fairings for durable water-beading action</li>
+                            </ul>
+                        </label>
+
+                        <!-- Tier 04: Apex Seasonal Shield - £100 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 04: Apex Seasonal Shield - £100" data-price="100" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 04: Apex Seasonal Shield</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£100</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li><strong>Includes all Tier 3 services plus:</strong></li>
+                                <li>Gloss Restoring Glaze: Hand-applied paintwork glaze to enrich depth, fill micro-scratches, and maximize clarity</li>
+                                <li>Premium Hydrophobic Sealant: Premium wax layer or ceramic spray coating for maximum long-term weather resistance</li>
+                                <li>Heavy Corrosion Defense: Comprehensive structural application of premium anti-corrosion layer (ACF-50/XCP) across undercarriage & frames</li>
+                                <li>Cockpit Optimization: Total dash panel clean and instrument screen clarity enhancement</li>
+                            </ul>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="moto_additional_services">
+                    <h3 style="text-align: center; color: #ff5500; margin-bottom: 16px;">Additional Services</h3>
+                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Services not included in the tiered pricing. Add these to get the full Apex experience.</p>
+                
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <!-- Ceramic Coating -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Ceramic Coating (Bikes) - From £120" data-price="120" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Ceramic Coating</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £120 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Adds a durable hydrophobic barrier to your paint, making it resistant to water, repels dirt, and keeps your bike looking new for longer.</p>
+                        </label>
+
+                        <!-- Paint Correction -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Paint Correction (Bikes) - From £80" data-price="80" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Paint Correction</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £80 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes swirl marks, light scratches and oxidation to bring back a deep, clean and glossy finish.</p>
+                        </label>
+
+                        <!-- Interior Detailing -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Interior Detailing (Bikes) - From £80" data-price="80" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Interior Detailing</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £80 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Deep cleans and sanitises your interior, including seat, plastics and trims. Removes dirt and grime.</p>
+                        </label>
+
+                        <!-- Leather Clean & Condition -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Leather Clean & Condition (Bikes) - From £30" data-price="30" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Leather Clean & Condition</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £30 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Deep cleans, removes dirt and oils, then conditions the leather to keep it soft and prevent cracking.</p>
+                        </label>
+
+                        <!-- Engine Bay Detailing -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Engine Bay Detailing (Bikes) - From £35" data-price="35" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Engine Bay Detailing</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £35 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes grease, dirt and grime from your engine bay, helping with performance, cooling, and appearance.</p>
+                        </label>
+
+                        <!-- Headlight Restoration -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Headlight Restoration (Bikes) - From £45" data-price="45" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Headlight Restoration</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £45</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes haze, yellowing and oxidation to restore clarity and improve visibility and appearance.</p>
+                        </label>
+
+                        <!-- Wheel Refurbishment -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Wheel Refurbishment (Bikes) - From £60" data-price="60" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Wheel Refurbishment</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £60 (Set)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes brake dust, kerb marks and corrosion. Finished with protection for a lasting shine.</p>
+                        </label>
+
+                        <!-- Winter / Pre-MOT Check -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Winter / Pre-MOT Check (Bikes) - From £50" data-price="50" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Winter / Pre-MOT Check</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £50</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Full inspection and deep clean of key areas to get you winter ready and MOT ready. Includes fluids, lights, tyres, brakes, battery and more.</p>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="car_treatments" style="display: none;">
+                    <h3 style="text-align: center; color: #ff5500; margin-bottom: 24px;">Premium Four-Tier Care & Protection</h3>
+                
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <!-- Tier 01: Express Refresh - £35 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 01: The Express Refresh - £35" data-price="35" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 01: The Express Refresh</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£35</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li>Snow foam pre-wash</li>
+                                <li>Safe two-bucket hand wash</li>
+                                <li>Wheels cleaned & tyres dressed</li>
+                                <li>Door shuts cleaned</li>
+                                <li>Exterior glass cleaned</li>
+                                <li>Spray wax for gloss & short-term protection</li>
+                                <li>Interior vacuum</li>
+                                <li>Dashboard & trims wiped</li>
+                            </ul>
+                        </label>
+
+                        <!-- Tier 02: Deep Clean & Protect - £65 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 02: Deep Clean & Protect - £65" data-price="65" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 02: Deep Clean & Protect</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£65</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li><strong>Includes all Tier 1 services plus:</strong></li>
+                                <li>Iron fallout treatment</li>
+                                <li>Tar spot removal</li>
+                                <li>Deep wheel & arch clean</li>
+                                <li>Premium spray wax</li>
+                                <li>Interior plastics dressed</li>
+                                <li>Mats cleaned</li>
+                                <li>Air freshener</li>
+                                <li>Exhaust tips cleaned</li>
+                            </ul>
+                        </label>
+
+                        <!-- Tier 03: Full Chemical Decon - £110 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 03: Full Chemical Decon - £110" data-price="110" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 03: Full Chemical Decon</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£110</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li><strong>Includes all Tier 2 services plus:</strong></li>
+                                <li>Full chemical decontamination</li>
+                                <li>Clay bar treatment</li>
+                                <li>Engine bay cleaned & dressed</li>
+                                <li>Paintwork glaze for enhanced gloss</li>
+                                <li>Glass cleaned inside & out</li>
+                                <li>Deep interior clean including vents, trims & hard-to-reach areas</li>
+                            </ul>
+                        </label>
+
+                        <!-- Tier 04: Apex Showroom Detail - £200 -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="radio" name="treatment" value="Tier 04: Apex Showroom Detail - £200" data-price="200" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0;">Tier 04: Apex Showroom Detail</h4>
+                            <p style="font-weight: bold; color: #ff5500; font-size: 1.5rem;">£200</p>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                                <li><strong>The Ultimate Package - Includes Tiers 1-3 plus:</strong></li>
+                                <li>Premium hand wax applied</li>
+                                <li>Exterior plastics restored & dressed</li>
+                                <li>Wheel arches deep cleaned & dressed</li>
+                                <li>Full interior detail</li>
+                                <li>Leather cleaned & conditioned (where applicable)</li>
+                                <li>Door seals & shuts detailed</li>
+                                <li>Final inspection & showroom finish</li>
+                            </ul>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="additional_services" style="display: none;">
+                    <h3 style="text-align: center; color: #ff5500; margin-bottom: 16px;">Additional Services</h3>
+                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Services not included in the tiered pricing. Add these to get the full Apex experience.</p>
+                
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <!-- Ceramic Coating -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Ceramic Coating (Cars) - From £150" data-price="150" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Ceramic Coating</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £150 (Cars) / From £120 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Adds a durable hydrophobic barrier to your paint, making it resistant to water, repels dirt, and keeps your vehicle looking new for longer.</p>
+                        </label>
+
+                        <!-- Paint Correction -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Paint Correction - From £100" data-price="100" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Paint Correction</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £100 (Cars) / From £80 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes swirl marks, light scratches and oxidation to bring back a deep, clean and glossy finish.</p>
+                        </label>
+
+                        <!-- Interior Detailing -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Interior Detailing - From £60" data-price="60" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Interior Detailing</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £60 (Cars) / From £80 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Deep cleans and sanitises your interior, including seats, carpets, plastics, leather and trims. Removes stains, odours and everyday grime.</p>
+                        </label>
+
+                        <!-- Leather Clean & Condition -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Leather Clean & Condition - From £50" data-price="50" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Leather Clean & Condition</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £50 (Cars) / From £30 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Deep cleans, removes dirt and oils, then conditions the leather to keep it soft, looking great and prevent cracking and fading.</p>
+                        </label>
+
+                        <!-- Engine Bay Detailing -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Engine Bay Detailing - From £50" data-price="50" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Engine Bay Detailing</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £50 (Cars) / From £35 (Bikes)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes grease, dirt and grime from your engine bay, helping with performance, cooling, and overall appearance.</p>
+                        </label>
+
+                        <!-- Headlight Restoration -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Headlight Restoration - From £45" data-price="45" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Headlight Restoration</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £45 (Pair)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes haze, yellowing and oxidation to restore clarity and improve visibility and appearance.</p>
+                        </label>
+
+                        <!-- Wheel Refurbishment -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Wheel Refurbishment - From £60" data-price="60" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Wheel Refurbishment</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £60 (Set)</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Removes brake dust, kerb marks and corrosion. Finished with protection for a lasting shine.</p>
+                        </label>
+
+                        <!-- Winter / Pre-MOT Check -->
+                        <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block;">
+                            <input type="checkbox" name="additional_services" value="Winter / Pre-MOT Check - From £50" data-price="50" style="margin-right: 10px;">
+                            <h4 style="color: #ff5500; margin-top: 0; margin-bottom: 10px;">Winter / Pre-MOT Check</h4>
+                            <p style="font-weight: bold; color: #ff5500; margin-bottom: 10px;">From £50</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Full inspection and deep clean of key areas to get you winter ready and MOT ready. Includes fluids, lights, tyres, brakes, battery and more.</p>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="other_treatments" style="display: none;">
+                    <h3 style="text-align: center; color: #ff5500; margin-bottom: 16px;">Other Vehicles</h3>
+                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">For other vehicles and bespoke detailing requests, please submit an inquiry below.</p>
+                    <label style="background: rgba(255,85,0,0.1); border: 1px solid #ff5500; padding: 25px; border-radius: 8px; cursor: pointer; display: block; text-align: center;">
+                        <input type="radio" name="treatment" value="Bespoke Quote (Other Vehicles)" data-price="0" checked style="margin-right: 10px;">
+                        <h4 style="color: #ff5500; margin-top: 0;">Request Bespoke Quote</h4>
+                        <p style="color: var(--text-muted);">We'll contact you to discuss your vehicle's needs</p>
+                    </label>
+                </div>
+
+                <div style="background: rgba(255,85,0,0.1); border: 1px solid #333; padding: 30px; border-radius: 8px; margin: 30px 0;">
+                    <h4 style="color: #ff5500; margin-top: 0;">Your Details</h4>
+                
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Full Name *</label>
+                            <input type="text" name="name" required style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Phone Number *</label>
+                            <input type="tel" name="phone" required style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Email *</label>
+                            <input type="email" name="email" required style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Preferred Date *</label>
+                            <input type="date" name="booking_date" id="booking_date" required style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Preferred Time</label>
+                            <input type="time" name="booking_time" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Vehicle Make</label>
+                            <input type="text" name="vehicle_make" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Vehicle Model</label>
+                            <input type="text" name="vehicle_model" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Year</label>
+                            <input type="text" name="vehicle_year" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Colour</label>
+                            <input type="text" name="vehicle_colour" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Registration Plate</label>
+                        <input type="text" name="vehicle_registration" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Additional Notes</label>
+                        <textarea name="notes" rows="4" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;"></textarea>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button type="submit" style="background-color: #ff5500; color: #fff; border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; font-weight: bold; text-transform: uppercase;">Request Booking</button>
+                </div>
+        </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Memberships Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 style="text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 40px;">Memberships</h2>
+            <div style="text-align: center;">
+                <a href="/detailing/memberships" class="btn" style="background-color: transparent; color: #ff5500; padding: 12px 30px; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block; border: 2px solid #ff5500;">View Membership Plans</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-5" style="background-color: var(--bg-card);">
+        <div class="container">
+            <h2 style="text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 40px;">Gallery</h2>
+            <div style="text-align: center;">
+                <a href="/detailing/portfolio" class="btn" style="background-color: #ff5500; color: #fff; padding: 12px 30px; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block;">View Our Work</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5">
+        <div class="container text-center">
+            <h2 class="mb-4" style="color: #fff; text-align: center;">Ready to elevate your machine?</h2>
+            <p style="max-width: 800px; margin: 0 auto 30px; font-size: 1.1rem; color: var(--text-muted); text-align: center;">
+                Located in Lancashire • All makes & models treated with absolute precision.
+            </p>
+            <h3 style="color: #ff5500; margin-bottom: 30px; font-size: 1.5rem; text-align: center;">07448472326</h3>
+        </div>
+    </section>
+</main>
+
+<script>
+function updateVehicleSections() {
+    const type = document.getElementById('vehicle_type').value;
+    const show = (id, on) => { document.getElementById(id).style.display = on ? 'block' : 'none'; };
+
+    show('moto_treatments', type === 'Motorcycle');
+    show('moto_additional_services', type === 'Motorcycle');
+    show('car_treatments', type === 'Car');
+    show('additional_services', type === 'Car');
+    show('other_treatments', type === 'Other');
+}
+
+document.getElementById('vehicle_type').addEventListener('change', updateVehicleSections);
+
+// Run on load and when returning via back/forward so the sections always match the dropdown
+updateVehicleSections();
+window.addEventListener('pageshow', updateVehicleSections);
+
+// Don't allow booking dates in the past
+(function () {
+    const d = new Date();
+    const today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    document.getElementById('booking_date').min = today;
+})();
+
+document.querySelectorAll('input[name="treatment"]').forEach((input) => {
+    input.addEventListener('change', () => {
+        document.getElementById('service_type').value = input.value;
+    });
+});
+
+// Direct booking form submission
+document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+    // keep every ticked additional service (fromEntries only keeps the last one)
+    data.additional_services = formData.getAll('additional_services').join(', ');
+    
+    try {
+        const response = await fetch('/detailing/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            alert('Booking request submitted! We will contact you soon.');
+            this.reset();
+        } else {
+            const err = await response.json().catch(() => ({}));
+            alert(err.error || 'Error submitting booking');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error submitting booking');
+    }
+});
+</script>
+
+<%- include('../partials/footer') %>

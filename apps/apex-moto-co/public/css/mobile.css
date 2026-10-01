@@ -1,0 +1,176 @@
+/* Extra Mobile CSS for iOS & Android Enhancements */
+
+/* Fix for iOS Safari safe area */
+body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
+
+header {
+    padding-top: max(15px, env(safe-area-inset-top));
+}
+
+/* Prevent text zoom on iOS */
+input, select, textarea, button {
+    font-size: 16px !important;
+}
+
+/* Better touch targets for mobile */
+.btn, .nav-btn, .qty-btn, .radio-option, .like-btn {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Improve iOS scrolling */
+.scrollable-list, .home-three-col {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Fix input focus on mobile */
+input:focus, select:focus, textarea:focus {
+    font-size: 16px !important;
+    zoom: 1;
+}
+
+/* Mobile cart panel improvements */
+#global-cart-panel {
+    bottom: env(safe-area-inset-bottom, 30px) !important;
+    right: env(safe-area-inset-right, 30px) !important;
+}
+
+@media (max-width: 480px) {
+    .container { padding: 0 12px; margin: 20px auto; }
+    
+    h1 { font-size: clamp(1.5em, 5vw, 2.5em); }
+    h2 { font-size: clamp(1.2em, 4vw, 2em); }
+    h3 { font-size: clamp(1em, 3vw, 1.5em); }
+    
+    .hero { padding: 40px 15px; }
+    .hero h1 { font-size: 1.8em; letter-spacing: 1px; }
+    .hero p { font-size: 0.95em; }
+    
+    .expand-btn { padding: 15px; font-size: 0.95em; }
+    .expand-content { padding: 15px !important; }
+    
+    .btn { padding: 12px 16px; font-size: 0.9em; width: 100%; margin-bottom: 10px; }
+    .site-prefs-buttons { flex-direction: column; gap: 8px; }
+    .site-prefs-buttons .btn { width: 100%; }
+    
+    .admin-panel, .admin-form-panel, .control-box {
+        padding: 15px !important;
+        border-radius: 6px;
+    }
+    
+    th, td { padding: 10px 8px !important; font-size: 0.85em; }
+    
+    /* STORE PAGE MOBILE FIXES */
+    .comp-grid { 
+        grid-template-columns: 1fr !important; 
+        gap: 15px !important; 
+        padding: 0 !important;
+    }
+    .card { 
+        border-radius: 6px; 
+        width: 100%;
+    }
+    .card-image { 
+        height: 180px !important; 
+        width: 100%;
+        object-fit: contain !important;
+    }
+    .card-content { 
+        padding: 15px !important; 
+    }
+    .card-title {
+        font-size: 1.1em !important;
+    }
+    .enter-btn { 
+        width: 100% !important; 
+        padding: 12px 16px !important; 
+        font-size: 0.9em !important;
+    }
+    
+    .event-card { flex-direction: row; margin-bottom: 15px; }
+    .event-date { min-width: 80px; padding: 12px 10px; }
+    .event-date .day { font-size: 1.6em; }
+    .event-details { padding: 15px; }
+    .event-details h3 { font-size: 1.1em; margin-bottom: 5px; }
+    
+    #global-cart-panel {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        width: calc(100% - 20px);
+        max-height: 60vh;
+        border-radius: 8px;
+    }
+    
+    .logo img { height: 120px !important; }
+    
+    .nav-links a { font-size: 1.2em; margin: 15px 0; }
+    
+    input[type="text"], input[type="email"], input[type="password"],
+    input[type="number"], input[type="tel"], input[type="date"],
+    select, textarea {
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 6px;
+        width: 100%;
+    }
+    
+    label { font-size: 0.9em; margin-top: 15px; }
+    
+    .announcement-post { padding: 15px; margin-bottom: 10px; }
+    .question-container { margin-bottom: 15px; padding: 12px; }
+    
+    .ticket-qty-wrapper { gap: 8px; }
+    .qty-btn { width: 40px; height: 40px; font-size: 1.2em; }
+    .qty-input { height: 40px; font-size: 1em; }
+    
+    .modal-box {
+        width: 95%;
+        max-width: 95vw;
+        padding: 20px;
+        margin: 10px;
+    }
+    .modal-box h3 { font-size: 1.3em; }
+    
+    .admin-nav-menu a { font-size: 0.8em; padding: 8px 12px; }
+}
+
+@media (max-width: 600px) {
+    .site-prefs-banner {
+        bottom: env(safe-area-inset-bottom, 10px);
+        left: 10px;
+        right: 10px;
+        max-width: calc(100% - 20px);
+        font-size: 0.8em;
+        padding: 15px;
+    }
+    
+    .home-three-col { grid-template-columns: 1fr; gap: 20px; }
+    
+    header nav { gap: 10px; }
+    .header-container { padding: 0 12px; }
+    
+    .comp-detail-wrapper { gap: 20px; padding: 0 12px; }
+    .prize-image { height: 250px; }
+    .buy-box { position: static; padding: 20px; }
+    
+    .price { font-size: 1.5em; }
+    
+    table { font-size: 0.85em; }
+    th, td { padding: 10px 8px; }
+    
+    /* STORE PAGE TABLET FIXES */
+    .comp-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+}

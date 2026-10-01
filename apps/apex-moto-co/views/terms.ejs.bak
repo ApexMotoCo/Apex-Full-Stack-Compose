@@ -1,0 +1,42 @@
+<%- include('./partials/header') %>
+
+<main class="container">
+    <div style="max-width: 900px; margin: 60px auto;">
+        <h1 style="color: #ff5500; margin-bottom: 10px; font-size: 2.5em; font-weight: 700;">Terms & Conditions</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 40px;">Last Updated: <%= new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+        
+        <div style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 40px; line-height: 1.9; font-size: 15px;">
+            <div style="color: var(--text-muted);">
+                <p><strong style="color: #ff5500; font-size: 1.1em;">Agreement to Terms</strong></p>
+                <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+
+                <%- (settings.terms_content || '')
+                    .replace(/^#+\s+/gm, '<p style="margin-top: 30px; margin-bottom: 15px;"><strong style="color: #ff5500; font-size: 1.1em;">')
+                    .replace(/\n\n/g, '</strong></p><p style="margin-top: 15px;">')
+                    .replace(/\n/g, '<br>')
+                    .replace(/<strong[^>]*>$/gm, '<strong$&</strong></p>')
+                    .replace(/#+/g, '') %>
+
+                <p style="margin-top: 40px;"><strong style="color: #ff5500; font-size: 1.1em;">Consumer Rights</strong></p>
+                <p>We comply with the Consumer Rights Act 2015. All products and services are provided as described. If you are not satisfied with your purchase, you have the right to return items within 14 days for a refund, subject to conditions outlined in our <a href="/privacy" style="color: #ff5500; text-decoration: none;">Privacy Policy</a>.</p>
+
+                <p style="margin-top: 30px;"><strong style="color: #ff5500; font-size: 1.1em;">Limitation of Liability</strong></p>
+                <p>Apex Moto & Co. shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the website or services, even if we have been advised of the possibility of such damages.</p>
+
+                <p style="margin-top: 30px;"><strong style="color: #ff5500; font-size: 1.1em;">Intellectual Property</strong></p>
+                <p>All content on this website, including text, graphics, logos, images, and software, is the property of Apex Moto & Co. or its content suppliers and is protected by international copyright laws. Unauthorized reproduction or distribution is prohibited.</p>
+
+                <p style="margin-top: 30px;"><strong style="color: #ff5500; font-size: 1.1em;">Governing Law</strong></p>
+                <p>These Terms & Conditions are governed by and construed in accordance with the laws of the United Kingdom, and you irrevocably submit to the exclusive jurisdiction of the courts located in the UK.</p>
+            </div>
+        </div>
+
+        <section style="background: rgba(255, 85, 0, 0.05); padding: 25px; border-radius: 8px; border-left: 4px solid #ff5500; margin-top: 50px; margin-bottom: 80px;">
+            <p style="margin: 0; color: var(--text-muted); font-size: 14px;">
+                If you have questions about these Terms & Conditions, please <a href="/contact" style="color: #ff5500; text-decoration: none; font-weight: 500;">contact us</a>.
+            </p>
+        </section>
+    </div>
+</main>
+
+<%- include('./partials/footer') %>

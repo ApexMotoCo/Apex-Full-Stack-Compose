@@ -1,0 +1,68 @@
+/* Hologram Background Effect */
+.hologram-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/ChatGPT Image Aug 25, 2026, 06_46_28 PM.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+  animation: hologram-pulse 8s ease-in-out infinite;
+  filter: blur(1px) brightness(1.2) hue-rotate(200deg) saturate(1.5);
+  mix-blend-mode: screen;
+}
+
+@keyframes hologram-pulse {
+  0%, 100% {
+    opacity: 0.08;
+    filter: blur(1px) brightness(1.2) hue-rotate(200deg) saturate(1.5);
+  }
+  50% {
+    opacity: 0.15;
+    filter: blur(1.5px) brightness(1.3) hue-rotate(210deg) saturate(1.8);
+  }
+}
+
+/* Ensure content is above hologram */
+body {
+  position: relative;
+}
+
+.container, main, footer, header, .admin-panel {
+  position: relative;
+  z-index: 1;
+}
+
+/* Additional glow overlay effect */
+.hologram-glow-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, rgba(0, 150, 255, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: glow-shift 12s ease-in-out infinite;
+}
+
+@keyframes glow-shift {
+  0%, 100% {
+    background: radial-gradient(ellipse at center, rgba(0, 150, 255, 0.05) 0%, transparent 70%);
+  }
+  50% {
+    background: radial-gradient(ellipse at center, rgba(255, 85, 0, 0.03) 0%, transparent 70%);
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .hologram-background {
+    background-attachment: scroll;
+  }
+}

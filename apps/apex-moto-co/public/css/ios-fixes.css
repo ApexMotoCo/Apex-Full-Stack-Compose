@@ -1,0 +1,63 @@
+/* iOS Safari-specific fixes */
+
+/* Force burger menu to show on mobile */
+@media (max-width: 1024px) {
+    .menu-toggle {
+        display: flex !important;
+        order: 2;
+        flex-shrink: 0;
+    }
+    
+    .logo {
+        order: 1;
+        flex-shrink: 0;
+        min-width: 0;
+    }
+    
+    .header-container {
+        gap: 15px;
+    }
+}
+
+/* iOS Safari specific */
+@supports (-webkit-touch-callout: none) {
+    .header-container {
+        min-height: 60px;
+    }
+    
+    .menu-toggle {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+    
+    .nav-links {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .nav-links a {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+}
+
+/* Ensure burger is clickable on iOS */
+.menu-toggle, .bar {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+.menu-toggle:active .bar {
+    background-color: #ff5500;
+}
+
+/* Fix for notch devices */
+@supports (padding: max(0px)) {
+    body {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+}

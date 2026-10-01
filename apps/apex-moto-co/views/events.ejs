@@ -1,0 +1,65 @@
+<%- include('./partials/header') %>
+
+<div class="hero">
+    <h1>UPCOMING EVENTS</h1>
+    <p>Join the ApexMoto&Co Community</p>
+</div>
+
+<div class="container">
+    <div style="margin-bottom: 40px; text-align: center;">
+        <h2 style="color: var(--primary); text-transform: uppercase; letter-spacing: 1px; font-size: 1.8em;">Our Events</h2>
+        <p style="color: var(--text-muted); font-size: 1.1em; max-width: 600px; margin: 15px auto;">
+            Connect with fellow motorcycle enthusiasts at our carefully curated events. From track days to community meet-ups, there's always something happening in the ApexMoto&Co universe.
+        </p>
+    </div>
+
+    <% if (events && events.length > 0) { %>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 50px;">
+            <% events.forEach(event => { %>
+                <div class="card" style="border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                    <% if (event.image) { %>
+                        <img src="<%= event.image %>" alt="<%= event.title %>" style="width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid var(--primary);">
+                    <% } else { %>
+                        <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #1a0a00 0%, #000000 100%); border-bottom: 2px solid var(--primary); display: flex; align-items: center; justify-content: center;">
+                            <span style="color: var(--primary); font-size: 3em;">🏍️</span>
+                        </div>
+                    <% } %>
+                    
+                    <div class="card-content" style="padding: 20px;">
+                        <h3 style="margin: 0 0 10px 0; color: var(--text-main); text-transform: uppercase; font-size: 1.3em; letter-spacing: 0.5px;"><%= event.title %></h3>
+                        
+                        <div style="margin-bottom: 15px; font-size: 0.95em; color: var(--text-muted);">
+                            <p style="margin: 8px 0;"><strong>📅 Date:</strong> <%= new Date(event.event_date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                            <% if (event.event_time) { %>
+                                <p style="margin: 8px 0;"><strong>🕐 Time:</strong> <%= event.event_time %></p>
+                            <% } %>
+                            <% if (event.location) { %>
+                                <p style="margin: 8px 0;"><strong>📍 Location:</strong> <%= event.location %></p>
+                            <% } %>
+                        </div>
+
+                        <% if (event.description) { %>
+                            <p style="margin: 12px 0; color: var(--text-muted); line-height: 1.6; font-size: 0.95em;"><%= event.description %></p>
+                        <% } %>
+
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <span style="display: inline-block; padding: 4px 12px; background: rgba(255, 85, 0, 0.1); color: var(--primary); border-radius: 20px; font-size: 0.85em; font-weight: 600; text-transform: uppercase;">
+                                <% if (event.status === 'upcoming') { %>🔔 Upcoming<% } %>
+                                <% if (event.status === 'ongoing') { %>🔴 Live Now<% } %>
+                                <% if (event.status === 'past') { %>✓ Past<% } %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <div style="text-align: center; padding: 60px 20px; background: rgba(255, 85, 0, 0.05); border-radius: 8px; margin: 40px 0;">
+            <p style="font-size: 3em; margin-bottom: 20px;">📅</p>
+            <h3 style="color: var(--text-muted); font-size: 1.3em; text-transform: uppercase; letter-spacing: 1px; margin: 0;">No Events Scheduled</h3>
+            <p style="color: var(--text-muted); margin-top: 10px; font-size: 0.95em;">Check back soon for exciting ApexMoto&Co events!</p>
+        </div>
+    <% } %>
+</div>
+
+<%- include('./partials/footer') %>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2FA Verification - ApexMoto&Co Admin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .info {
+      color: #666;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    .error {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 8px;
+      padding: 10px;
+      background: #fee;
+      border-radius: 4px;
+      display: none;
+    }
+    .error.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>2FA Verification</h1>
+    <p class="info">Enter the 6-digit code from your authenticator app</p>
+    
+    <form id="2fa-form">
+      <div class="form-group">
+        <label for="code">Authentication Code</label>
+        <input 
+          type="text" 
+          id="code" 
+          name="code" 
+          maxlength="6" 
+          pattern="[0-9]{6}"
+          placeholder="000000"
+          autocomplete="off"
+          required
+        >
+      </div>
+      <button type="submit">Verify</button>
+      <div id="error" class="error"></div>
+    </form>
+  </div>
+
+  <script>
+    const codeInput = document.getElementById('code');
+    const form = document.getElementById('2fa-form');
+    const errorDiv = document.getElementById('error');
+
+    codeInput.focus();
+
+    codeInput.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.classList.remove('show');
+
+      const code = codeInput.value.trim();
+      if (code.length !== 6) {
+        errorDiv.textContent = 'Please enter a 6-digit code';
+        errorDiv.classList.add('show');
+        return;
+      }
+
+      try {
+        const csrfToken = '<%= csrfToken %>';
+        const response = await fetch('/admin/verify-2fa', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+          },
+          body: JSON.stringify({ code })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          window.location.href = '/admin';
+        } else {
+          errorDiv.textContent = data.error || 'Invalid code';
+          errorDiv.classList.add('show');
+          codeInput.value = '';
+          codeInput.focus();
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Error verifying code. Please try again.';
+        errorDiv.classList.add('show');
+      }
+    });
+  </script>
+</body>
+</html>

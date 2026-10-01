@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Request Logs - Admin</title>
+  <%- include('../partials/head'); %>
+</head>
+<body>
+  <%- include('../partials/header'); %>
+  
+  <div class="container mt-4">
+    <h1>Request Logs</h1>
+    
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Method</th>
+          <th>Path</th>
+          <th>Status</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (logs && logs.length > 0) { %>
+          <% logs.forEach(log => { %>
+            <tr>
+              <td><%= log.timestamp || 'N/A' %></td>
+              <td><%= log.method || 'N/A' %></td>
+              <td><%= log.path || 'N/A' %></td>
+              <td><%= log.status || 'N/A' %></td>
+              <td><%= log.ip || 'N/A' %></td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="5" class="text-center">No request logs found</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  
+  <%- include('../partials/footer'); %>
+</body>
+</html>

@@ -1,0 +1,135 @@
+﻿<%- include('./partials/header') %>
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+        <h1 style="margin: 0; color: var(--primary); text-transform: uppercase; font-size: 2em; letter-spacing: 1px;">ðŸ›ï¸ Manage Store</h1>
+        <a href="/admin" class="btn btn-warning" style="text-decoration: none;">â† Back to Dashboard</a>
+    </div>
+
+    <div class="admin-panel" style="margin-bottom: 40px;">
+        <h3 style="margin-top: 0; color: var(--text-main);">Add New Item</h3>
+        <form id="item-form" enctype="multipart/form-data">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <label>Item Name</label>
+                    <input type="text" name="name" placeholder="e.g. Racing Helmet" required>
+                </div>
+                <div>
+                    <label>Category</label>
+                    <select name="category" required style="padding: 8px; background: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer;">
+                        <option value="">-- Select Category --</option>
+                        <option value="Safety">ðŸ›¡ï¸ Safety</option>
+                        <option value="Apparel">ðŸ‘• Apparel</option>
+                        <option value="Accessories">ðŸŽ’ Accessories</option>
+                        <option value="Helmets">ðŸï¸ Helmets</option>
+                        <option value="Jackets">ðŸ§¥ Jackets</option>
+                        <option value="Gloves">ðŸ§¤ Gloves</option>
+                        <option value="Gear">âš™ï¸ Gear</option>
+                        <option value="Other">ðŸ“¦ Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Price (Â£)</label>
+                    <input type="number" name="price" step="0.01" placeholder="299.99" required>
+                </div>
+                <div>
+                    <label>Main Product Image</label>
+                    <input type="file" name="image" accept="image/*" style="padding: 8px 0;">
+                </div>
+                <div>
+                    <label>Front View Image</label>
+                    <input type="file" name="image_front" accept="image/*" style="padding: 8px 0;">
+                </div>
+                <div>
+                    <label>Back View Image</label>
+                    <input type="file" name="image_back" accept="image/*" style="padding: 8px 0;">
+                </div>
+            </div>
+            <label>Description</label>
+            <textarea name="description" placeholder="Describe this item..." rows="3" required></textarea>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Add Item</button>
+        </form>
+    </div>
+
+    <div class="admin-panel">
+        <h3 style="margin-top: 0; color: var(--text-main);">All Store Items</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Views</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(item => { %>
+                        <tr>
+                            <td>
+                                <% if (item.image) { %>
+                                    <img src="<%= item.image %>" alt="<%= item.name %>" style="height: 50px; width: 50px; object-fit: cover; border-radius: 4px;">
+                                <% } else { %>
+                                    <span style="color: var(--text-muted); font-size: 0.85em;">No image</span>
+                                <% } %>
+                            </td>
+                            <td><strong><%= item.name %></strong></td>
+                            <td><span style="background: var(--bg-main); padding: 4px 8px; border-radius: 3px; font-size: 0.85em;"><%= item.category %></span></td>
+                            <td><span style="color: var(--warning); font-weight: bold;">Â£<%= item.price.toFixed(2) %></span></td>
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;"><%= item.description %></td>
+                            <td>
+                                <% if (item.image_front || item.image_back) { %>
+                                    <span style="color: #10b981; font-size: 0.9em;">
+                                        <% if (item.image_front) { %>ðŸ‘•<% } %>
+                                        <% if (item.image_back) { %>ðŸ”„<% } %>
+                                    </span>
+                                <% } else { %>
+                                    <span style="color: var(--text-muted); font-size: 0.85em;">-</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <button class="btn-icon btn-delete" onclick="deleteItem(<%= item.id %>)" style="padding: 6px 12px;">Delete</button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('item-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const response = await fetch('/admin/store', {
+        method: 'POST',
+        body: formData
+    });
+
+    if (response.ok) {
+        alert('Item added!');
+        location.reload();
+    } else {
+        alert('Error adding item');
+    }
+});
+
+async function deleteItem(id) {
+    if (!confirm('Delete this item?')) return;
+    
+    const response = await fetch(`/admin/store/${id}`, { method: 'DELETE' });
+    if (response.ok) {
+        location.reload();
+    } else {
+        alert('Error deleting item');
+    }
+}
+</script>
+
+<%- include('./partials/footer') %>
+

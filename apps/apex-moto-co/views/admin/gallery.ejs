@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+
+<main class="container" style="padding: 30px 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 30px;">
+        <h1 style="color: var(--primary); margin: 0;">🖼️ Portfolio Gallery</h1>
+        <a href="/admin" class="btn btn-warning">Back to Dashboard</a>
+    </div>
+
+    <section style="background: var(--bg-card); border: 2px solid #ff5500; border-radius: 8px; padding: 25px; margin-bottom: 35px;">
+        <h2 style="color: var(--primary); margin-top: 0;">Upload a Portfolio Photo</h2>
+        <p style="color: var(--text-muted);">JPEG, PNG, WebP or GIF up to 10 MB. Uploaded images are stored in the persistent application data volume.</p>
+        <form method="post" action="/admin/gallery" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <label style="display: block; margin: 15px 0 8px; font-weight: 700;">Photo <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" required style="display: block; margin-top: 8px;"></label>
+            <label style="display: block; margin: 15px 0 8px; font-weight: 700;">Title <input type="text" name="title" maxlength="120" placeholder="e.g. Ceramic coating finish" style="display: block; width: 100%; box-sizing: border-box; margin-top: 8px; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 6px;"></label>
+            <label style="display: block; margin: 15px 0 8px; font-weight: 700;">Alt text <input type="text" name="alt_text" maxlength="180" placeholder="Describe the photo for accessibility" style="display: block; width: 100%; box-sizing: border-box; margin-top: 8px; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 6px;"></label>
+            <label style="display: block; margin: 15px 0 20px; font-weight: 700;">Display order <input type="number" name="sort_order" value="0" min="0" max="9999" style="display: block; width: 140px; margin-top: 8px; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 6px;"></label>
+            <button type="submit" class="btn btn-primary">Upload Photo</button>
+        </form>
+    </section>
+
+    <section>
+        <h2 style="color: var(--primary);">Current Photos</h2>
+        <% if (images.length) { %>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                <% images.forEach(image => { %>
+                    <article style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                        <img src="/uploads/gallery/<%= encodeURIComponent(image.filename) %>" alt="<%= image.alt_text %>" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block;">
+                        <div style="padding: 15px;">
+                            <strong style="color: #fff;"><%= image.title || image.original_name %></strong>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;"><%= image.alt_text %></p>
+                            <form method="post" action="/admin/gallery/<%= image.id %>/delete" onsubmit="return confirm('Delete this portfolio photo?');">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </article>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p style="color: var(--text-muted);">No portfolio photos uploaded yet.</p>
+        <% } %>
+    </section>
+</main>
+
+<%- include('../partials/footer') %>

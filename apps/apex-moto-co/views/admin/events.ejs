@@ -1,0 +1,86 @@
+<%-include('../partials/header')%>
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+        <h1 style="margin: 0; color: var(--primary); text-transform: uppercase; font-size: 2em; letter-spacing: 1px;">📅 Events</h1>
+        <a href="/admin" class="btn btn-warning" style="text-decoration: none;">← Back to Dashboard</a>
+    </div>
+
+    <div class="admin-panel" style="margin-bottom: 40px;">
+        <h3 style="margin-top: 0; color: var(--text-main);">Create Event</h3>
+        <form id="evt-form">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <label>Event Title</label>
+                    <input type="text" name="title" placeholder="Event name..." required>
+                </div>
+                <div>
+                    <label>Event Date</label>
+                    <input type="date" name="event_date" required>
+                </div>
+            </div>
+            <label>Description</label>
+            <textarea name="description" placeholder="Describe the event..." rows="4" required></textarea>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Create Event</button>
+        </form>
+    </div>
+
+    <div class="admin-panel">
+        <h3 style="margin-top: 0; color: var(--text-main);">All Events</h3>
+        <% if (events && events.length > 0) { %>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                <% events.forEach(evt => { %>
+                    <div class="event-card">
+                        <div class="event-date">
+                            <div class="month"><%= new Date(evt.event_date).toLocaleDateString('en-US', { month: 'short' }) %></div>
+                            <div class="day"><%= new Date(evt.event_date).getDate() %></div>
+                        </div>
+                        <div class="event-details">
+                            <h3><%= evt.title %></h3>
+                            <p><%= evt.description %></p>
+                            <p style="margin: 8px 0 0 0; font-size: 0.85em;">By <strong><%= evt.author %></strong></p>
+                        </div>
+                        <button class="btn-icon btn-delete" onclick="deleteEvt(<%= evt.id %>)" style="padding: 6px 12px; white-space: nowrap; margin-left: auto;">Delete</button>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p style="text-align: center; color: var(--text-muted);">No events scheduled.</p>
+        <% } %>
+    </div>
+</div>
+
+<script>
+document.getElementById('evt-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+
+    const response = await fetch('/admin/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('Event created!');
+        location.reload();
+    } else {
+        alert('Error creating event');
+    }
+});
+
+async function deleteEvt(id) {
+    if (!confirm('Delete this event?')) return;
+    
+    const response = await fetch(`/admin/events/${id}`, { method: 'DELETE' });
+    if (response.ok) {
+        location.reload();
+    } else {
+        alert('Error deleting event');
+    }
+}
+</script>
+
+<%-include('../partials/footer')%>

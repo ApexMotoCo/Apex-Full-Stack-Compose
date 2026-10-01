@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Winners - ApexMoto&Co</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/mobile.css">
+    <link rel="stylesheet" href="/css/ios-fixes.css">
+    <link rel="stylesheet" href="/css/mobile-menu-fix.css">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a href="/" class="logo">
+            APEXMOTO<span>&CO</span>
+        </a>
+
+        <button class="menu-toggle" id="mobile-menu" type="button" aria-label="Toggle navigation" aria-controls="site-navigation" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <nav class="nav-links" id="site-navigation">
+            <a href="/store">Store</a>
+            <a href="/competitions/live">Live Competitions</a>
+            <a href="/competitions/past">Past Competitions</a>
+            <a href="/contact">Contact</a>
+            <% if (user) { %>
+                <a href="/dashboard" class="nav-btn-alt">Dashboard</a>
+                <a href="/logout" class="nav-btn-alt">Logout (<%= user.name %>)</a>
+            <% } else { %>
+                <a href="/login" class="nav-btn-alt">Log In</a>
+                <a href="/register" class="nav-btn">Register</a>
+            <% } %>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+    <h1 style="color: #ff8c00; margin-top: 40px; text-transform: uppercase; letter-spacing: 1px;">Past Winners</h1>
+    
+    <div style="margin-top: 40px; padding: 60px 40px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); text-align: center;">
+        <p style="font-size: 18px; color: var(--text-muted);">No winners yet.</p>
+        <p style="color: var(--text-muted); margin-top: 10px;">As our competitions launch, winners will appear here!</p>
+    </div>
+</div>
+
+<footer style="background-color: #050505; color: var(--text-muted); text-align: center; padding: 40px 20px; border-top: 1px solid var(--border-color); margin-top: 80px;">
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <p style="margin: 0 0 15px 0; font-size: 0.9em;">© 2026 ApexMoto&Co. All rights reserved.</p>
+        <p style="display: flex; justify-content: center; gap: 15px; font-size: 0.8em; border-top: 1px solid var(--border-color); padding-top: 20px;">
+            <a href="/legal/terms" style="color: var(--text-muted); text-decoration: none;">Terms & Conditions</a>
+            <a href="/legal/privacy" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a>
+            <a href="/legal/cookies" style="color: var(--text-muted); text-decoration: none;">Cookie Policy</a>
+        </p>
+    </div>
+</footer>
+
+<script src="/js/burger-menu.js"></script>
+
+</body>
+</html>

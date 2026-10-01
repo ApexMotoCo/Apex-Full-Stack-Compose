@@ -1,0 +1,52 @@
+<%- include('./partials/header') %>
+
+<main class="container">
+    <div style="max-width: 900px; margin: 60px auto;">
+        <h1 style="color: #ff5500; margin-bottom: 10px; font-size: 2.5em; font-weight: 700;">Cookie Policy</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 40px;">Last Updated: <%= new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+        
+        <div style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 40px; line-height: 1.9; font-size: 15px;">
+            <div style="color: var(--text-muted);">
+                <p><strong style="color: #ff5500; font-size: 1.1em;">What Are Cookies?</strong></p>
+                <p>Cookies are small text files placed on your device when you visit our website. They help us understand how you use our site and improve your experience. This Cookie Policy explains the cookies we use, why we use them, and your choices regarding cookies.</p>
+
+                <p style="margin-top: 40px;"><strong style="color: #ff5500; font-size: 1.1em;">Types of Cookies We Use</strong></p>
+                <ul style="margin-left: 20px; color: var(--text-muted);">
+                    <li><strong>Essential Cookies:</strong> Required for the website to function (e.g., security, authentication)</li>
+                    <li><strong>Performance Cookies:</strong> Help us understand how visitors use the site and improve performance</li>
+                    <li><strong>Functional Cookies:</strong> Remember your preferences and settings</li>
+                    <li><strong>Marketing Cookies:</strong> Used to deliver personalized content and measure marketing effectiveness</li>
+                </ul>
+
+                <p style="margin-top: 30px;"><strong style="color: #ff5500; font-size: 1.1em;">Your Cookie Choices</strong></p>
+                <p>You have the right to accept or reject cookies. You can control cookies through your browser settings. However, blocking essential cookies may affect your ability to use certain features of the website. Please note that your cookie preferences are respected in accordance with the Privacy and Electronic Communications Regulations 2003 (PECR).</p>
+
+                <p style="margin-top: 30px;"><strong style="color: #ff5500; font-size: 1.1em;">Third-Party Cookies</strong></p>
+                <p>We may use third-party services that place cookies on your device. These partners include analytics providers and payment processors. We do not control third-party cookies, so we recommend reviewing their privacy policies. Current third-party partners include:</p>
+                <ul style="margin-left: 20px; color: var(--text-muted); margin-top: 10px;">
+                    <li>Google Analytics (analytics)</li>
+                    <li>Shopify (e-commerce platform)</li>
+                </ul>
+
+                <p style="margin-top: 30px;"><strong style="color: #ff5500; font-size: 1.1em;">How to Control Cookies</strong></p>
+                <p>Most web browsers allow you to control cookies through settings. You can typically find these options under "Preferences" or "Settings." You can choose to:</p>
+                <ul style="margin-left: 20px; color: var(--text-muted); margin-top: 10px;">
+                    <li>Block all cookies</li>
+                    <li>Allow cookies only from certain sites</li>
+                    <li>Delete cookies when closing your browser</li>
+                </ul>
+
+                <p style="margin-top: 30px;"><strong style="color: #ff5500; font-size: 1.1em;">Contact Information</strong></p>
+                <p>If you have questions about our use of cookies or wish to exercise your rights, <a href="/contact" style="color: #ff5500; text-decoration: none;">contact us here</a>.</p>
+            </div>
+        </div>
+
+        <section style="background: rgba(255, 85, 0, 0.05); padding: 25px; border-radius: 8px; border-left: 4px solid #ff5500; margin-top: 50px; margin-bottom: 80px;">
+            <p style="margin: 0; color: var(--text-muted); font-size: 14px;">
+                For more information, visit our <a href="/privacy" style="color: #ff5500; text-decoration: none; font-weight: 500;">Privacy Policy</a> or <a href="/terms" style="color: #ff5500; text-decoration: none; font-weight: 500;">Terms & Conditions</a>.
+            </p>
+        </section>
+    </div>
+</main>
+
+<%- include('./partials/footer') %>

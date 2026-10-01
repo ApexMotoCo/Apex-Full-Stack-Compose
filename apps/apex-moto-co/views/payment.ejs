@@ -1,0 +1,106 @@
+<%- include('./partials/header') %>
+
+<div class="container">
+    <div style="max-width: 600px; margin: 60px auto;">
+        
+        <!-- Payment Header -->
+        <div style="text-align: center; margin-bottom: 40px; border-bottom: 2px solid #ff5500; padding-bottom: 20px;">
+            <h1 style="margin: 0; color: #ff5500; text-transform: uppercase; letter-spacing: 2px;">💳 PAYMENT</h1>
+            <p style="color: var(--text-muted); margin-top: 10px;">Order #<%= order.id %></p>
+        </div>
+
+        <!-- Order Summary Card -->
+        <div style="background: var(--bg-card); border: 2px solid #ff5500; border-radius: 8px; padding: 30px; margin-bottom: 30px;">
+            
+            <h2 style="color: var(--primary); text-transform: uppercase; margin-top: 0; font-size: 1.2em;">Order Summary</h2>
+            
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 20px;">
+                <% if (Array.isArray(order.items)) { %>
+                    <% order.items.forEach((item, index) => { %>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 0;">
+                            <span><%= item %></span>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 0;">
+                        <span><%= order.order_type === 'store' ? 'Store Items' : 'Competition Entry' %></span>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Amount Due -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <span style="color: var(--text-main); font-weight: bold; font-size: 1.1em;">Subtotal:</span>
+                <span style="color: var(--warning); font-weight: bold; font-size: 1.2em;">£<%= order.total.toFixed(2) %></span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <span style="color: var(--text-main); font-weight: bold; font-size: 1.1em;">Tax:</span>
+                <span style="color: var(--text-muted); font-weight: bold; font-size: 1.1em;">£0.00</span>
+            </div>
+
+            <div style="border-top: 2px solid #ff5500; padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #ff5500; font-weight: bold; font-size: 1.3em; text-transform: uppercase;">Total Due:</span>
+                <span style="color: #ff5500; font-weight: bold; font-size: 1.5em;">£<%= order.total.toFixed(2) %></span>
+            </div>
+
+        </div>
+
+        <!-- Status Card -->
+        <div style="background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5em;">ℹ️</span>
+                <div>
+                    <p style="margin: 0; color: #10b981; font-weight: bold;">Order Status: <span style="text-transform: uppercase;"><%= order.status %></span></p>
+                    <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.9em;">Secured by Shopify Payment Gateway</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Message (Error/Success) -->
+        <div id="payment-message" style="display: none; margin-bottom: 20px; padding: 15px; border-radius: 6px; border-left: 4px solid;"></div>
+
+        <!-- Payment Button -->
+        <button id="pay-btn" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.1em; text-transform: uppercase; font-weight: bold; margin-bottom: 15px;">
+            🛒 Complete Purchase on Shopify - £<%= order.total.toFixed(2) %>
+        </button>
+
+        <!-- Secure Info -->
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.85em;">
+            <p style="margin: 0;">🔒 Your payment information is secure and encrypted</p>
+            <p style="margin: 5px 0 0 0;">Powered by <strong>Shopify</strong></p>
+        </div>
+
+        <!-- Additional Info -->
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <h3 style="color: var(--primary); font-size: 0.95em; text-transform: uppercase; margin-bottom: 15px;">Payment Information</h3>
+            
+            <div style="background: var(--bg-main); padding: 15px; border-radius: 6px; border-left: 4px solid #ff5500;">
+                <p style="margin: 0 0 10px 0; color: var(--text-muted); font-size: 0.9em;">
+                    <strong>Order Type:</strong> <%= order.order_type === 'store' ? 'Store Purchase' : 'Competition Entry' %>
+                </p>
+                <p style="margin: 0 0 10px 0; color: var(--text-muted); font-size: 0.9em;">
+                    <strong>Order ID:</strong> #<%= order.id %>
+                </p>
+                <p style="margin: 0; color: var(--text-muted); font-size: 0.9em;">
+                    <strong>Date:</strong> <%= new Date(order.created_at).toLocaleDateString() %>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const payBtn = document.getElementById('pay-btn');
+const messageDiv = document.getElementById('payment-message');
+const storeUrl = 'apexingoodcomapny.myshopify.com';
+
+payBtn.addEventListener('click', () => {
+    payBtn.disabled = true;
+    payBtn.innerHTML = 'Redirecting to Shopify...';
+    window.location.href = 'https://' + storeUrl + '/cart/';
+});
+</script>
+
+<%- include('./partials/footer') %>

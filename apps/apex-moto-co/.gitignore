@@ -1,0 +1,10 @@
+node_modules/
+data/
+backups/
+.env
+.DS_Store
+*.log
+*.db
+sessions.db
+
+ovh-dns-config.json

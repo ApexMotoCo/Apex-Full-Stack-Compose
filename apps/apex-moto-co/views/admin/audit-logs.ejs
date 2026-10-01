@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+    <div style="max-width: 1200px; margin: 40px auto;">
+        
+        <h1 style="color: var(--primary); text-transform: uppercase; margin-bottom: 30px;">📋 Audit Logs</h1>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; padding: 20px; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--border-color);">
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">Timestamp</th>
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">Event ID</th>
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">Request ID</th>
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">User</th>
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">Action</th>
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">Resource</th>
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">Details</th>
+                        <th style="padding: 12px; text-align: left; color: var(--primary);">IP Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (logs && logs.length > 0) { %>
+                        <% logs.forEach(log => { %>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 12px; color: var(--text-muted); font-size: 0.9em;"><%= new Date(log.timestamp).toLocaleString('en-GB', { timeZone: 'Europe/London' }) %></td>
+                                <td style="padding: 12px; color: var(--text-main);"><%= log.id %></td>
+                                <td style="padding: 12px; color: var(--text-muted); font-size: 0.8em;"><%= log.request_id || '-' %></td>
+                                <td style="padding: 12px; color: var(--text-main);"><%= log.username %></td>
+                                <td style="padding: 12px; color: #ff5500; font-weight: bold;"><%= log.action %></td>
+                                <td style="padding: 12px; color: var(--text-main);"><%= log.resource %></td>
+                                <td style="padding: 12px; color: var(--text-muted); font-size: 0.9em;"><%= log.details %></td>
+                                <td style="padding: 12px; color: var(--text-muted); font-size: 0.9em;"><%= log.ip_address %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="8" style="padding: 20px; text-align: center; color: var(--text-muted);">No audit logs found</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

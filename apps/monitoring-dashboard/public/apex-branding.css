@@ -1,0 +1,175 @@
+/**
+ * APEX GLOBAL BRANDING STYLES
+ * ============================================================
+ * Apply these styles to all Apex projects
+ */
+
+:root {
+  --apex-primary: #ff6b35;
+  --apex-secondary: #004e89;
+  --apex-accent: #f7931e;
+  --apex-dark: #0a0e27;
+  --apex-light: #f5f7fa;
+  --apex-border: #e0e6ed;
+  --apex-online: #10b981;
+  --apex-offline: #ef4444;
+  --apex-degraded: #f59e0b;
+  --apex-gray: #6b7280;
+}
+
+/* Apex Branding Common Styles */
+.apex-logo {
+  font-size: 2.5em;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--apex-primary) 0%, var(--apex-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -1px;
+}
+
+.apex-header {
+  background: linear-gradient(135deg, var(--apex-dark) 0%, #1a2a4e 100%);
+  color: white;
+  padding: 2rem;
+  border-bottom: 3px solid var(--apex-primary);
+}
+
+.apex-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.apex-badge-primary {
+  background: linear-gradient(135deg, var(--apex-primary) 0%, var(--apex-accent) 100%);
+  color: white;
+}
+
+.apex-badge-secondary {
+  background: rgba(0, 78, 137, 0.1);
+  color: var(--apex-secondary);
+  border: 1px solid var(--apex-secondary);
+}
+
+.apex-button {
+  background: linear-gradient(135deg, var(--apex-primary) 0%, var(--apex-accent) 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.apex-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+}
+
+.apex-button:active {
+  transform: translateY(0);
+}
+
+.apex-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid var(--apex-primary);
+  transition: all 0.3s ease;
+}
+
+.apex-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(255, 107, 53, 0.15);
+  border-left-color: var(--apex-accent);
+}
+
+.apex-input {
+  border: 2px solid var(--apex-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.apex-input:focus {
+  outline: none;
+  border-color: var(--apex-primary);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.apex-footer {
+  background: var(--apex-dark);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--apex-border);
+}
+
+.apex-footer a {
+  color: var(--apex-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.apex-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Status Indicators with Apex Colors */
+.apex-status-online {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--apex-online);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.apex-status-offline {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--apex-offline);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.apex-status-degraded {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--apex-degraded);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes apex-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes apex-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.apex-animate-pulse {
+  animation: apex-pulse 2s infinite;
+}
+
+.apex-animate-slide {
+  animation: apex-slide-in 0.5s ease-out;
+}

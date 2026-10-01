@@ -1,0 +1,19 @@
+<%- include('../partials/header') %>
+
+<main class="container" style="padding: 30px 0;">
+    <div style="display: flex; justify-content: space-between; gap: 15px; align-items: center; margin-bottom: 25px;">
+        <h1 style="color: var(--primary); margin: 0;">System Health</h1>
+        <a href="/admin" class="btn btn-warning">Back to Dashboard</a>
+    </div>
+    <p style="color: var(--text-muted);">Checked <%= checkedAt.toLocaleString('en-GB', { timeZone: 'Europe/London' }) %></p>
+    <div style="display: grid; gap: 15px;">
+        <% Object.entries(checks).forEach(([name, check]) => { %>
+            <div style="display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 18px; background: var(--bg-card); border: 1px solid var(--border-color); border-left: 4px solid <%= check.status === 'ok' ? '#10b981' : check.status === 'warning' ? '#f59e0b' : '#ef4444' %>; border-radius: 6px;">
+                <div><strong style="text-transform: uppercase;"><%= name %></strong><div style="color: var(--text-muted); margin-top: 5px;"><%= check.detail %></div></div>
+                <strong style="color: <%= check.status === 'ok' ? '#10b981' : check.status === 'warning' ? '#f59e0b' : '#ef4444' %>;"><%= check.status.toUpperCase() %></strong>
+            </div>
+        <% }); %>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

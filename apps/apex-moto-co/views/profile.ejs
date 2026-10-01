@@ -1,0 +1,237 @@
+<%- include('./partials/header') %>
+
+<div class="container" style="max-width: 600px; margin: 40px auto;">
+    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; padding: 30px;">
+        <h2 style="margin-top: 0; text-transform: uppercase; color: var(--primary); margin-bottom: 30px;">👤 My Profile</h2>
+        
+        <form id="profileForm" style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Profile Picture -->
+            <div style="text-align: center;">
+                <img id="profilePicPreview" src="<%= user.profile_picture || '/images/default-avatar.png' %>" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; margin-bottom: 15px;">
+                <div>
+                    <label for="profilePicture" style="display: inline-block; padding: 10px 20px; background: var(--primary); color: white; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase;">
+                        Upload Picture
+                    </label>
+                    <input type="file" id="profilePicture" name="profilePicture" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                </div>
+            </div>
+
+            <!-- Display Name -->
+            <div>
+                <label for="displayName" style="display: block; color: var(--text-main); font-weight: bold; margin-bottom: 8px;">Display Name</label>
+                <input type="text" id="displayName" name="displayName" value="<%= user.display_name || '' %>" placeholder="Your display name" maxlength="50" style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; font-size: 1em;">
+                <small style="color: var(--text-muted); display: block; margin-top: 5px;">Min 4 characters, no rude names</small>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email" style="display: block; color: var(--text-main); font-weight: bold; margin-bottom: 8px;">Email</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>" placeholder="your@email.com" style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; font-size: 1em;">
+            </div>
+
+            <!-- Username (Read-only) -->
+            <div>
+                <label for="username" style="display: block; color: var(--text-main); font-weight: bold; margin-bottom: 8px;">Username</label>
+                <input type="text" id="username" value="<%= user.username %>" disabled style="width: 100%; padding: 12px; background: #222; color: #888; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; font-size: 1em; cursor: not-allowed;">
+                <small style="color: var(--text-muted); display: block; margin-top: 5px;">Cannot be changed</small>
+            </div>
+
+            <!-- Member Since -->
+            <div>
+                <label style="display: block; color: var(--text-main); font-weight: bold; margin-bottom: 8px;">Member Since</label>
+                <div style="padding: 12px; background: #111; color: #aaa; border: 1px solid #444; border-radius: 4px;">
+                    <%= new Date(user.created_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                </div>
+            </div>
+
+            <!-- Error/Success Messages -->
+            <div id="message" style="display: none; padding: 12px; border-radius: 4px; text-align: center; font-weight: bold;"></div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="enter-btn" style="width: 100%; padding: 14px; background-color: var(--primary); color: #fff; border: none; border-radius: 4px; font-weight: 800; text-transform: uppercase; cursor: pointer; font-size: 1em;">
+                Save Changes
+            </button>
+        </form>
+
+        <!-- Change Password Section -->
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-main); text-transform: uppercase; margin-bottom: 20px;">Change Password</h3>
+            <form id="passwordForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label for="currentPassword" style="display: block; color: var(--text-main); font-weight: bold; margin-bottom: 8px;">Current Password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password" style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; font-size: 1em;">
+                </div>
+                <div>
+                    <label for="newPassword" style="display: block; color: var(--text-main); font-weight: bold; margin-bottom: 8px;">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; font-size: 1em;">
+                </div>
+                <div>
+                    <label for="confirmPassword" style="display: block; color: var(--text-main); font-weight: bold; margin-bottom: 8px;">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; font-size: 1em;">
+                </div>
+                <div id="passwordMessage" style="display: none; padding: 12px; border-radius: 4px; text-align: center; font-weight: bold;"></div>
+                <button type="submit" class="enter-btn" style="width: 100%; padding: 14px; background-color: var(--primary); color: #fff; border: none; border-radius: 4px; font-weight: 800; text-transform: uppercase; cursor: pointer; font-size: 1em;">
+                    Update Password
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Profanity filter
+const profanityList = [
+    'badword1', 'badword2', 'badword3', 'offensive', 'rude', 'vulgar', 'inappropriate',
+    'asshole', 'bastard', 'bitch', 'damn', 'dammit', 'hell', 'crap', 'piss', 'shit',
+    'fuck', 'dick', 'cock', 'pussy', 'whore', 'slut', 'fag', 'gay', 'nigger', 'nazi',
+    'terrorist', 'rapist', 'child abuser', 'killer', 'murderer'
+];
+
+function containsProfanity(text) {
+    const lower = text.toLowerCase();
+    return profanityList.some(word => lower.includes(word));
+}
+
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('profilePicPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Handle profile form submission
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const displayName = document.getElementById('displayName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const messageDiv = document.getElementById('message');
+    
+    // Validate display name
+    if (displayName && displayName.length < 4) {
+        messageDiv.textContent = 'Display name must be at least 4 characters';
+        messageDiv.style.backgroundColor = '#ef4444';
+        messageDiv.style.color = 'white';
+        messageDiv.style.display = 'block';
+        return;
+    }
+    
+    if (displayName && containsProfanity(displayName)) {
+        messageDiv.textContent = 'Display name contains inappropriate language';
+        messageDiv.style.backgroundColor = '#ef4444';
+        messageDiv.style.color = 'white';
+        messageDiv.style.display = 'block';
+        return;
+    }
+    
+    // Create FormData for file upload
+    const formData = new FormData();
+    formData.append('displayName', displayName);
+    formData.append('email', email);
+    
+    const fileInput = document.getElementById('profilePicture');
+    if (fileInput.files.length > 0) {
+        formData.append('profilePicture', fileInput.files[0]);
+    }
+    
+    try {
+        const response = await fetch('/profile/update', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            messageDiv.textContent = 'Profile updated successfully!';
+            messageDiv.style.backgroundColor = '#10b981';
+            messageDiv.style.color = 'white';
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            messageDiv.textContent = data.message || 'Error updating profile';
+            messageDiv.style.backgroundColor = '#ef4444';
+            messageDiv.style.color = 'white';
+            messageDiv.style.display = 'block';
+        }
+    } catch (error) {
+        messageDiv.textContent = 'Error: ' + error.message;
+        messageDiv.style.backgroundColor = '#ef4444';
+        messageDiv.style.color = 'white';
+        messageDiv.style.display = 'block';
+    }
+});
+
+// Handle password change
+document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const messageDiv = document.getElementById('passwordMessage');
+    
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        messageDiv.textContent = 'All password fields are required';
+        messageDiv.style.backgroundColor = '#ef4444';
+        messageDiv.style.color = 'white';
+        messageDiv.style.display = 'block';
+        return;
+    }
+    
+    if (newPassword.length < 8) {
+        messageDiv.textContent = 'New password must be at least 8 characters';
+        messageDiv.style.backgroundColor = '#ef4444';
+        messageDiv.style.color = 'white';
+        messageDiv.style.display = 'block';
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        messageDiv.textContent = 'Passwords do not match';
+        messageDiv.style.backgroundColor = '#ef4444';
+        messageDiv.style.color = 'white';
+        messageDiv.style.display = 'block';
+        return;
+    }
+    
+    try {
+        const response = await fetch('/profile/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPassword, newPassword })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            messageDiv.textContent = 'Password changed successfully!';
+            messageDiv.style.backgroundColor = '#10b981';
+            messageDiv.style.color = 'white';
+            messageDiv.style.display = 'block';
+            document.getElementById('passwordForm').reset();
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            messageDiv.textContent = data.message || 'Error changing password';
+            messageDiv.style.backgroundColor = '#ef4444';
+            messageDiv.style.color = 'white';
+            messageDiv.style.display = 'block';
+        }
+    } catch (error) {
+        messageDiv.textContent = 'Error: ' + error.message;
+        messageDiv.style.backgroundColor = '#ef4444';
+        messageDiv.style.color = 'white';
+        messageDiv.style.display = 'block';
+    }
+});
+</script>
+
+<%- include('./partials/footer') %>

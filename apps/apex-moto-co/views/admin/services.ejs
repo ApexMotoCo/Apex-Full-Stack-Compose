@@ -1,0 +1,105 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+    <div style="max-width: 1200px; margin: 40px auto;">
+        
+        <h1 style="color: var(--primary); text-transform: uppercase; margin-bottom: 30px;">📋 Manage Services</h1>
+
+        <!-- Add Service Form -->
+        <div style="background: var(--bg-card); border: 2px solid #ff5500; border-radius: 8px; padding: 30px; margin-bottom: 40px;">
+            <h2 style="color: var(--primary); margin-top: 0;">Add New Service</h2>
+            
+            <form id="add-service-form">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: var(--text-main);">Service Name</label>
+                    <input type="text" id="service-name" placeholder="e.g., Premium Detailing" style="width: 100%; padding: 12px; background: #111; color: var(--text-main); border: 1px solid #444; border-radius: 6px; font-size: 1em;" required>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: var(--text-main);">Description</label>
+                    <textarea id="service-description" placeholder="Describe this service..." style="width: 100%; padding: 12px; background: #111; color: var(--text-main); border: 1px solid #444; border-radius: 6px; font-size: 1em; min-height: 100px; font-family: inherit;" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="padding: 12px 30px;">Add Service</button>
+            </form>
+        </div>
+
+        <!-- Services List -->
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; padding: 30px;">
+            <h2 style="color: var(--primary); margin-top: 0;">Current Services</h2>
+            
+            <% if (services && services.length > 0) { %>
+                <div style="display: grid; gap: 20px;">
+                    <% services.forEach(service => { %>
+                        <div style="background: #111; border: 1px solid var(--border-color); border-radius: 6px; padding: 20px; display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <h3 style="margin: 0 0 10px 0; color: var(--text-main);"><%= service.name %></h3>
+                                <p style="margin: 0; color: var(--text-muted); line-height: 1.6;"><%= service.description %></p>
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-left: 20px;">
+                                <button onclick="editService(<%= service.id %>, '<%= service.name %>', '<%= service.description.replace(/'/g, "\\'") %>')" class="btn" style="background: var(--warning); color: #000; padding: 8px 15px; font-size: 0.9em;">Edit</button>
+                                <button onclick="deleteService(<%= service.id %>)" class="btn" style="background: var(--danger); color: white; padding: 8px 15px; font-size: 0.9em;">Delete</button>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <p style="color: var(--text-muted); text-align: center; padding: 40px;">No services added yet.</p>
+            <% } %>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// Add Service
+document.getElementById('add-service-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('service-name').value;
+    const description = document.getElementById('service-description').value;
+    
+    const response = await fetch('/admin/services', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description })
+    });
+    
+    if (response.ok) {
+        location.reload();
+    } else {
+        alert('Error adding service');
+    }
+});
+
+// Edit Service
+function editService(id, name, description) {
+    const newName = prompt('Service name:', name);
+    if (!newName) return;
+    
+    const newDescription = prompt('Service description:', description);
+    if (!newDescription) return;
+    
+    fetch(`/admin/services/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName, description: newDescription })
+    }).then(res => {
+        if (res.ok) location.reload();
+        else alert('Error updating service');
+    });
+}
+
+// Delete Service
+function deleteService(id) {
+    if (!confirm('Delete this service?')) return;
+    
+    fetch(`/admin/services/${id}`, {
+        method: 'DELETE'
+    }).then(res => {
+        if (res.ok) location.reload();
+        else alert('Error deleting service');
+    });
+}
+</script>
+
+<%- include('../partials/footer') %>

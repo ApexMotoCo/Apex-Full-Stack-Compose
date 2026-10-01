@@ -1,0 +1,131 @@
+<%- include('header') %>
+
+<div class="container mt-5 mb-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="mb-4" style="color: #ff8c00;">My Dashboard</h1>
+
+      <% if (user) { %>
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="card" style="border-top: 3px solid #ff8c00;">
+              <div class="card-body">
+                <h5 class="card-title">Site Credit Balance</h5>
+                <h2 style="color: #ff8c00;">£<%= siteCredit || '0.00' %></h2>
+                <p class="text-muted">Non-withdrawable credits for future entries</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card" style="border-top: 3px solid #ff8c00;">
+              <div class="card-body">
+                <h5 class="card-title">Total Entries</h5>
+                <h2 style="color: #ff8c00;"><%= entries %></h2>
+                <p class="text-muted">Competitions entered</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card" style="border-top: 3px solid #ff8c00;">
+              <div class="card-body">
+                <h5 class="card-title">Spent</h5>
+                <h2 style="color: #ff8c00;">£<%= totalSpent || '0.00' %></h2>
+                <p class="text-muted">Total competition & store purchases</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Entries -->
+        <div class="card mb-4">
+          <div class="card-header" style="background-color: #ff8c00; color: white;">
+            <h5 class="mb-0">My Competition Entries</h5>
+          </div>
+          <div class="card-body">
+            <% if (myEntries && myEntries.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Competition</th>
+                      <th>Entry Date</th>
+                      <th>Entry Fee</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% myEntries.forEach(entry => { %>
+                      <tr>
+                        <td><strong><%= entry.competition_name %></strong></td>
+                        <td><%= new Date(entry.created_at).toLocaleDateString() %></td>
+                        <td>£<%= entry.entry_fee.toFixed(2) %></td>
+                        <td>
+                          <span class="badge" style="background-color: <%= entry.status === 'completed' ? '#28a745' : '#ffc107' %>;">
+                            <%= entry.status %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No competition entries yet. <a href="/competitions/live">Enter a competition</a></p>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- My Orders -->
+        <div class="card">
+          <div class="card-header" style="background-color: #ff8c00; color: white;">
+            <h5 class="mb-0">My Orders</h5>
+          </div>
+          <div class="card-body">
+            <% if (myOrders && myOrders.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% myOrders.forEach(order => { %>
+                      <tr>
+                        <td><strong>#<%= order.id %></strong></td>
+                        <td><%= order.order_type === 'competition' ? '🏆 Entry' : '🛍️ Store' %></td>
+                        <td>£<%= order.total.toFixed(2) %></td>
+                        <td>
+                          <span class="badge" style="background-color: <%= order.status === 'completed' ? '#28a745' : '#ffc107' %>;">
+                            <%= order.status %>
+                          </span>
+                        </td>
+                        <td><%= new Date(order.created_at).toLocaleDateString() %></td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No orders yet. <a href="/store">Shop now</a> or <a href="/competitions/live">enter a competition</a></p>
+            <% } %>
+          </div>
+        </div>
+
+      <% } else { %>
+        <div class="alert alert-warning">
+          <p>Please <a href="/login">log in</a> to view your dashboard.</p>
+        </div>
+      <% } %>
+
+    </div>
+  </div>
+</div>
+
+<%- include('footer') %>

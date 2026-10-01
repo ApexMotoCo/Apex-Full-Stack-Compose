@@ -1,0 +1,183 @@
+<%-include('../partials/header')%>
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+        <h1 style="margin: 0; color: var(--primary); text-transform: uppercase; font-size: 2em; letter-spacing: 1px;">👥 Manage Users</h1>
+        <a href="/admin" class="btn btn-warning" style="text-decoration: none;">← Back to Dashboard</a>
+    </div>
+
+    <div class="admin-panel">
+        <h3 style="margin-top: 0; color: var(--text-main);">All Users</h3>
+        <p style="color: var(--text-muted); margin-top: -5px;">
+            View account details, change roles and securely reset passwords. Passwords are never displayed in the admin panel.
+        </p>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(usr => { 
+                        const username = usr.username || 'Unknown';
+                        const safeUsername = String(username).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                    %>
+                        <tr>
+                            <td><strong>#<%= usr.id %></strong></td>
+                            <td><strong><%= username %></strong></td>
+                            <td><%= usr.email || 'No email' %></td>
+                            <td>
+                                <select onchange="changeRole(<%= usr.id %>, this.value)" style="background: <%= usr.role === 'admin' ? '#ef4444' : '#10b981' %>; color: white; padding: 4px 8px; border: none; border-radius: 3px; font-weight: bold; text-transform: uppercase; cursor: pointer;">
+                                    <option value="user" <%= usr.role === 'user' ? 'selected' : '' %>>User</option>
+                                    <option value="admin" <%= usr.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                </select>
+                            </td>
+                            <td style="font-size: 0.9em; color: var(--text-muted);"><%= usr.created_at ? new Date(usr.created_at).toLocaleString() : 'Unknown' %></td>
+                            <td style="white-space: nowrap;">
+                                <button class="btn-icon" onclick="toggleDetails(<%= usr.id %>)" style="padding: 6px 12px; margin-right: 5px;">Details</button>
+                                <button class="btn-icon btn-warning" onclick="resetPassword(<%= usr.id %>, '<%= safeUsername %>')" style="padding: 6px 12px; margin-right: 5px;">Reset Password</button>
+                                <button class="btn-icon btn-delete" onclick="deleteUser(<%= usr.id %>, '<%= safeUsername %>')" style="padding: 6px 12px;">Delete</button>
+                            </td>
+                        </tr>
+                        <tr id="details-<%= usr.id %>" style="display: none;">
+                            <td colspan="6" style="background: rgba(255,255,255,0.03); padding: 18px;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                                    <div>
+                                        <strong style="color: var(--primary);">User ID</strong>
+                                        <div>#<%= usr.id %></div>
+                                    </div>
+                                    <div>
+                                        <strong style="color: var(--primary);">Username</strong>
+                                        <div><%= username %></div>
+                                    </div>
+                                    <div>
+                                        <strong style="color: var(--primary);">Email</strong>
+                                        <div><%= usr.email || 'No email' %></div>
+                                    </div>
+                                    <div>
+                                        <strong style="color: var(--primary);">Role</strong>
+                                        <div><%= usr.role || 'user' %></div>
+                                    </div>
+                                    <div>
+                                        <strong style="color: var(--primary);">Account Created</strong>
+                                        <div><%= usr.created_at ? new Date(usr.created_at).toLocaleString() : 'Unknown' %></div>
+                                    </div>
+                                    <div>
+                                        <strong style="color: var(--primary);">Last Login</strong>
+                                        <div style="color: <%= usr.last_login ? 'var(--text-main)' : '#f97316' %>"><%= usr.last_login ? new Date(`${usr.last_login.replace(' ', 'T')}Z`).toLocaleString('en-GB', { timeZone: 'Europe/London' }) : 'Never logged in' %></div>
+                                    </div>
+                                    <div>
+                                        <strong style="color: var(--primary);">Password</strong>
+                                        <div>Stored securely as a hash</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleDetails(userId) {
+    const row = document.getElementById(`details-${userId}`);
+    if (!row) return;
+    row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+}
+
+async function changeRole(userId, newRole) {
+    const response = await fetch(`/admin/users/${userId}/role`, {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole })
+    });
+
+    if (response.ok) {
+        alert(`User role changed to ${newRole}!`);
+    } else {
+        const data = await response.json().catch(() => ({}));
+        alert(data.error || 'Error changing role');
+        location.reload();
+    }
+}
+
+async function resetPassword(userId, username) {
+    const newPassword = prompt(`Enter a new password for ${username}:\n\nMinimum 8 characters.`);
+
+    if (newPassword === null) return;
+
+    if (newPassword.length < 8) {
+        alert('Password must be at least 8 characters long.');
+        return;
+    }
+
+    const confirmation = prompt('Re-enter the new password to confirm:');
+
+    if (confirmation === null) return;
+
+    if (newPassword !== confirmation) {
+        alert('The passwords do not match. Nothing was changed.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${userId}/password`, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: newPassword })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            alert(data.error || 'Unable to reset password.');
+            return;
+        }
+
+        alert(`Password for ${username} was updated successfully.`);
+    } catch (error) {
+        console.error('Password reset error:', error);
+        alert('Unable to reset password. Please try again.');
+    }
+}
+
+async function deleteUser(id, name) {
+    if (!confirm(`Are you sure you want to permanently delete ${name}?\n\nThis will remove their account and saved detailing information. Their order history will be retained.`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${id}`, {
+            method: 'DELETE',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            alert(data.error || 'Unable to delete user');
+            return;
+        }
+
+        alert('User deleted successfully.');
+        location.reload();
+    } catch (error) {
+        console.error('User deletion error:', error);
+        alert('Unable to delete user. Please try again.');
+    }
+}
+</script>
+
+<%-include('../partials/footer')%>

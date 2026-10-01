@@ -1,0 +1,471 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: #050505;
+  color: #e5e5e5;
+}
+
+.App {
+  min-height: 100vh;
+  background: #050505;
+}
+
+.header {
+  background: #0a0a0a;
+  color: white;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 85, 0, 0.2);
+  border-bottom: 2px solid #ff5500;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 85, 0, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 85, 0, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.logo-image {
+  height: 90px;
+  width: auto;
+  filter: drop-shadow(0 4px 15px rgba(255, 85, 0, 0.4));
+  max-width: 95%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo-image:hover {
+  transform: scale(1.05);
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.2rem 2rem;
+  background: #111111;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.nav-button {
+  padding: 0.7rem 1.5rem;
+  border: 2px solid #333;
+  background-color: #1a1a1a;
+  color: #e5e5e5;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nav-button:hover {
+  background-color: #222;
+  border-color: #ff5500;
+  color: #ff5500;
+  transform: translateY(-1px);
+}
+
+.nav-button.active {
+  background: linear-gradient(135deg, #ff5500 0%, #ff7722 100%);
+  color: #ffffff;
+  border-color: #ff5500;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(255, 85, 0, 0.4);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2.5rem auto;
+  padding: 0 1.5rem;
+}
+
+.tab-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .tab-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .tab-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .container {
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+  }
+}
+
+.form-section,
+.list-section {
+  background: #0a0a0a;
+  padding: 2rem;
+  border-radius: 6px;
+  border: 2px solid #1f1f1f;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.form-section:hover,
+.list-section:hover {
+  border-color: #ff5500;
+  box-shadow: 0 12px 40px rgba(255, 85, 0, 0.15);
+}
+
+.form-section h2,
+.list-section h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #ff5500;
+  border-bottom: 2px solid #ff5500;
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #ff5500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+input,
+select,
+textarea {
+  padding: 0.8rem;
+  border: 2px solid #1f1f1f;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #111111;
+  color: #e5e5e5;
+  transition: all 0.3s ease;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #333;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #ff5500;
+  background: #0a0a0a;
+  box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.1);
+}
+
+input::placeholder {
+  color: #666;
+}
+
+button {
+  padding: 0.85rem 1.6rem;
+  background: linear-gradient(135deg, #ff5500 0%, #ff7722 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 6px 20px rgba(255, 85, 0, 0.3);
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 85, 0, 0.45);
+  background: linear-gradient(135deg, #ff6b2c 0%, #ff8033 100%);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0px);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.asset-card {
+  background: #111111;
+  border: 2px solid #1f1f1f;
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5rem;
+  align-items: start;
+  border-left: 4px solid #ff5500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.asset-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 85, 0, 0.3) 0%, transparent 100%);
+}
+
+.asset-card:hover {
+  border-color: #ff5500;
+  box-shadow: 0 8px 24px rgba(255, 85, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.asset-info {
+  position: relative;
+  z-index: 1;
+}
+
+.asset-info h3 {
+  margin: 0 0 0.75rem 0;
+  color: #ff5500;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.asset-info p {
+  margin: 0.35rem 0;
+  color: #b8b8b8;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.asset-info strong {
+  color: #e5e5e5;
+  font-weight: 600;
+}
+
+.asset-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.asset-actions button {
+  padding: 0.6rem 1rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.3);
+}
+
+.delete-btn:hover {
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 85, 0, 0.15);
+  color: #ff5500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid #ff5500;
+}
+
+.status-badge.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.status-badge.maintenance {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.status-badge.retired {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+  border-color: #9ca3af;
+}
+
+.loading,
+.empty-state {
+  text-align: center;
+  color: #666;
+  padding: 2.5rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.empty-state {
+  background: #111111;
+  border-radius: 6px;
+  border: 2px dashed #1f1f1f;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.asset-card,
+.form-section,
+.list-section {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* =========================================================
+   APEX ASSET MANAGEMENT - ASSET WORKSPACE
+   ========================================================= */
+.apex-asset-form { gap: 1.25rem; }
+.apex-form-message { position: relative; padding: .9rem 1rem; border-radius: 6px; border: 1px solid; font-weight: 600; line-height: 1.5; }
+.apex-form-message.error { color: #ff7b7b; background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.45); }
+.apex-form-message.success { color: #7ee2a8; background: rgba(34,197,94,.08); border-color: rgba(34,197,94,.35); }
+.apex-form-section-label { color: #ff5500; font-size: .75rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: .7rem; }
+.apex-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.apex-field { display: flex; flex-direction: column; min-width: 0; }
+.apex-field-wide { grid-column: 1 / -1; }
+.apex-field label { margin-bottom: .45rem; }
+.apex-field input, .apex-field select, .apex-field textarea { width: 100%; }
+.apex-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .5rem; }
+.apex-form-hint { color: #707070; font-size: .78rem; line-height: 1.5; max-width: 55%; }
+.apex-orange-button, .apex-secondary-button, .apex-danger-button { border-radius: 5px; padding: .72rem 1rem; font-weight: 800; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
+.apex-orange-button { background: linear-gradient(135deg,#ff5500,#ff7626); color: #fff; border: 1px solid #ff5500; }
+.apex-secondary-button { background: #151515; color: #ddd; border: 1px solid #333; box-shadow: none; }
+.apex-secondary-button:hover { background: #202020; border-color: #ff5500; color: #fff; }
+.apex-danger-button { background: rgba(220,38,38,.10); color: #ff7777; border: 1px solid rgba(220,38,38,.45); box-shadow: none; }
+.apex-danger-button:hover { background: rgba(220,38,38,.2); border-color: #ef4444; }
+.apex-orange-button.small, .apex-secondary-button.small, .apex-danger-button.small { padding: .55rem .72rem; font-size: .7rem; }
+.apex-assets-panel { width: 100%; }
+.apex-asset-toolbar { display: grid; grid-template-columns: minmax(220px,2fr) repeat(3,minmax(130px,1fr)); gap: .75rem; padding: 1rem; background: #080808; border: 1px solid #222; border-radius: 7px; margin-bottom: 1rem; }
+.apex-asset-search, .apex-filter-field { min-width: 0; }
+.apex-asset-toolbar label { display: block; font-size: .68rem; margin-bottom: .35rem; color: #777; }
+.apex-asset-toolbar input, .apex-asset-toolbar select { width: 100%; padding: .7rem .75rem; font-size: .85rem; }
+.apex-asset-results-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: #777; font-size: .78rem; margin-bottom: .9rem; }
+.apex-asset-results-bar strong { color: #ddd; }
+.apex-link-button { background: none; border: 0; box-shadow: none; padding: 0; color: #ff5500; text-transform: none; letter-spacing: 0; font-size: .78rem; }
+.apex-link-button:hover { background: none; box-shadow: none; transform: none; text-decoration: underline; }
+.apex-message-close { float: right; background: none; border: 0; box-shadow: none; padding: 0 .25rem; color: inherit; font-size: 1.2rem; line-height: 1; text-transform: none; }
+.apex-asset-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(430px,1fr)); gap: 1rem; }
+.apex-asset-card { background: linear-gradient(145deg,#111 0%,#0b0b0b 100%); border: 1px solid #252525; border-left: 3px solid #ff5500; border-radius: 7px; padding: 1.15rem; min-width: 0; transition: .2s ease; }
+.apex-asset-card:hover { border-color: #ff5500; box-shadow: 0 12px 35px rgba(0,0,0,.45); transform: translateY(-1px); }
+.apex-asset-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; margin-bottom: 1rem; }
+.apex-asset-id { color: #ff5500; font-size: .7rem; font-weight: 900; letter-spacing: .12em; }
+.apex-asset-card h3 { margin: .2rem 0 0; color: #f2f2f2; font-size: 1.05rem; }
+.apex-asset-status { display: inline-flex; align-items: center; border: 1px solid #444; border-radius: 999px; padding: .28rem .6rem; font-size: .65rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+.apex-asset-status.active { color: #7ee2a8; border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.08); }
+.apex-asset-status.inactive { color: #ff9b9b; border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.08); }
+.apex-asset-status.maintenance { color: #ffc46b; border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.08); }
+.apex-asset-status.retired { color: #aaa; background: rgba(107,114,128,.08); }
+.apex-asset-card-body { display: grid; grid-template-columns: 1fr 145px; gap: 1rem; align-items: center; }
+.apex-asset-details { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; }
+.apex-asset-details div { min-width: 0; }
+.apex-asset-details span { display: block; color: #666; font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .2rem; }
+.apex-asset-details strong { display: block; color: #ddd; font-size: .82rem; overflow-wrap: anywhere; }
+.apex-asset-qr { display: flex; flex-direction: column; align-items: center; gap: .35rem; }
+.apex-asset-qr > div { background: #fff; padding: 4px; border-radius: 4px; }
+.apex-asset-qr span { color: #777; font-size: .6rem; font-weight: 800; letter-spacing: .1em; }
+.apex-asset-description { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid #222; color: #888; font-size: .78rem; line-height: 1.55; }
+.apex-asset-actions { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1rem; padding-top: .85rem; border-top: 1px solid #222; }
+.apex-assignment-panel { display: grid; grid-template-columns: 1.2fr 1.5fr auto; gap: .7rem; align-items: end; margin-top: .8rem; padding: .9rem; background: #080808; border: 1px solid #292929; border-radius: 5px; }
+.apex-assignment-panel strong, .apex-assignment-panel span { display: block; }
+.apex-assignment-panel strong { color: #ff5500; font-size: .78rem; }
+.apex-assignment-panel span { color: #666; font-size: .68rem; margin-top: .2rem; }
+.apex-assignment-panel select { width: 100%; }
+.apex-history-panel { margin-top: .8rem; padding: .9rem; background: #080808; border: 1px solid #292929; border-radius: 5px; color: #777; font-size: .75rem; }
+.apex-history-title { color: #ff5500; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; margin-bottom: .4rem; }
+.apex-history-row { padding: .65rem 0; border-top: 1px solid #1f1f1f; }
+.apex-history-row div { display: flex; gap: .5rem; flex-wrap: wrap; }
+.apex-history-row strong { color: #ddd; font-size: .72rem; }
+.apex-history-row span { color: #aaa; font-size: .72rem; }
+.apex-history-row small { color: #666; font-size: .65rem; }
+.apex-edit-panel { margin-top: .5rem; padding: .9rem; background: #080808; border: 1px solid #292929; border-radius: 5px; }
+.apex-inline-actions { display: flex; gap: .5rem; margin-top: .8rem; }
+.apex-empty-assets { padding: 3rem 1rem; text-align: center; border: 1px dashed #292929; border-radius: 7px; background: #080808; }
+.apex-empty-icon { color: #ff5500; font-size: 2.2rem; margin-bottom: .5rem; }
+.apex-empty-assets h3 { margin: 0; color: #ddd; }
+.apex-empty-assets p { color: #666; font-size: .8rem; }
+
+@media (max-width: 900px) {
+  .apex-asset-toolbar { grid-template-columns: 1fr 1fr; }
+  .apex-asset-search { grid-column: 1 / -1; }
+  .apex-assignment-panel { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 650px) {
+  .apex-form-grid, .apex-asset-details, .apex-asset-card-body { grid-template-columns: 1fr; }
+  .apex-field-wide { grid-column: auto; }
+  .apex-form-footer { align-items: stretch; flex-direction: column; }
+  .apex-form-hint { max-width: none; }
+  .apex-asset-toolbar { grid-template-columns: 1fr; }
+  .apex-asset-search { grid-column: auto; }
+  .apex-asset-grid { grid-template-columns: 1fr; }
+  .apex-asset-qr { align-items: flex-start; }
+}

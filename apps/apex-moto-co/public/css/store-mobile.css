@@ -1,0 +1,94 @@
+/* Store Page Mobile Responsiveness */
+
+/* Ensure card container works on all devices */
+.comp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .comp-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+        padding: 0 !important;
+    }
+    
+    .card {
+        width: 100% !important;
+        height: auto !important;
+    }
+    
+    .card-image {
+        height: 200px !important;
+        width: 100% !important;
+        object-fit: contain !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .comp-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        padding: 0 !important;
+    }
+    
+    .card {
+        width: 100% !important;
+        border-radius: 6px;
+    }
+    
+    .card-image {
+        height: 180px !important;
+        width: 100% !important;
+        object-fit: contain !important;
+        background: var(--bg-main) !important;
+    }
+    
+    .card-content {
+        padding: 15px !important;
+    }
+    
+    .card-title {
+        font-size: 1em !important;
+        margin: 0 0 8px 0 !important;
+    }
+    
+    .card-price {
+        font-size: 1.3em !important;
+    }
+    
+    .enter-btn {
+        width: 100% !important;
+        padding: 12px !important;
+        font-size: 0.9em !important;
+        min-height: 44px;
+    }
+}
+
+/* Store header mobile fixes */
+@media (max-width: 768px) {
+    .container > div > div:first-child {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .container > div > div:first-child h2 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    #category-filter {
+        width: 100%;
+        min-width: auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 12px !important;
+        margin: 15px auto !important;
+    }
+}

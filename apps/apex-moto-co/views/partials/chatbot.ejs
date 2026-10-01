@@ -1,0 +1,31 @@
+<% if (isPublicPage !== false) { %>
+<div class="chatbot" data-chatbot data-csrf-token="<%= csrfToken %>">
+    <button class="chatbot-toggle" type="button" data-chatbot-toggle aria-expanded="false" aria-controls="chatbot-panel">
+        <span aria-hidden="true">💬</span>
+        <span class="chatbot-toggle-label">Ask Apex</span>
+    </button>
+    <section class="chatbot-panel" id="chatbot-panel" data-chatbot-panel hidden aria-label="ApexMoto&Co assistant">
+        <div class="chatbot-header">
+            <div>
+                <strong>Apex assistant</strong>
+                <span>Quick answers about ApexMoto&Co</span>
+            </div>
+            <button class="chatbot-close" type="button" data-chatbot-close aria-label="Close chat" onclick="this.closest('[data-chatbot-panel]').hidden = true; this.closest('[data-chatbot]').querySelector('[data-chatbot-toggle]').setAttribute('aria-expanded', 'false');"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="chatbot-messages" data-chatbot-messages aria-live="polite">
+            <div class="chatbot-message chatbot-message--assistant">Hi! I can help with our store, detailing, servicing, events or bookings.</div>
+        </div>
+        <div class="chatbot-suggestions" data-chatbot-suggestions>
+            <button type="button" data-chatbot-suggestion="What services do you offer?">Services</button>
+            <button type="button" data-chatbot-suggestion="How do I book?">Booking</button>
+            <button type="button" data-chatbot-suggestion="Where is the store?">Store</button>
+        </div>
+        <form class="chatbot-form" data-chatbot-form>
+            <label class="visually-hidden" for="chatbot-input">Ask a question</label>
+            <input id="chatbot-input" data-chatbot-input type="text" maxlength="500" autocomplete="off" placeholder="Ask a question..." required>
+            <button type="submit" aria-label="Send message">➤</button>
+        </form>
+        <p class="chatbot-status" data-chatbot-status role="status"></p>
+    </section>
+</div>
+<% } %>

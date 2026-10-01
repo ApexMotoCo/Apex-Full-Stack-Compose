@@ -1,0 +1,66 @@
+<%-include('./header')%>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info">
+                    <h5 class="mb-0">Entry Form</h5>
+                </div>
+                <div class="card-body">
+                    <h4><%= competition.name %></h4>
+                    <p class="text-muted"><%= competition.date %> • <%= competition.location %></p>
+
+                    <div class="alert alert-info">
+                        <strong>Entry Fee:</strong> $<%= competition.entry_fee.toFixed(2) %>
+                    </div>
+
+                    <p><%= competition.description %></p>
+
+                    <form id="entry-form">
+                        <div class="mb-3">
+                            <label for="driver-name" class="form-label">Driver Name</label>
+                            <input type="text" class="form-control" id="driver-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="vehicle" class="form-label">Vehicle</label>
+                            <input type="text" class="form-control" id="vehicle" placeholder="Make and Model" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="experience" class="form-label">Experience Level</label>
+                            <select class="form-control" id="experience" required>
+                                <option value="">Select...</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                                <option value="professional">Professional</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-danger btn-lg w-100">Register & Pay $<%= competition.entry_fee.toFixed(2) %></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('entry-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const response = await fetch('/competitions/<%= competition.id %>/entry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            driver_name: document.getElementById('driver-name').value,
+            vehicle: document.getElementById('vehicle').value,
+            experience: document.getElementById('experience').value
+        })
+    });
+
+    const data = await response.json();
+    if (data.success) window.location.href = data.redirectUrl;
+});
+</script>
+
+<%-include('./footer')%>

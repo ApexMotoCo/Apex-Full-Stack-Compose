@@ -1,0 +1,33 @@
+<%- include('./partials/header') %>
+
+<div class="container">
+    <div class="admin-form-panel" style="max-width: 600px; margin: 0 auto;">
+        <h2 style="margin-top: 0; text-transform: uppercase; text-align: center; color: var(--primary); letter-spacing: 1px;">📝 Register</h2>
+        
+        <% if (locals.error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+        <% if (locals.success) { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <form method="POST" style="margin-top: 30px;">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="johndoe" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="john@example.com" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Register</button>
+        </form>
+
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 30px 0;">
+        
+        <p style="text-align: center; color: var(--text-muted);">Already have an account? <a href="/login" style="color: var(--primary); text-decoration: none; font-weight: bold;">Log in here</a></p>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+
+<main class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 style="color: #ff5500;">Our Portfolio</h1>
+            <p style="font-size: 1.2rem; color: var(--text-muted);">See the incredible transformations we've achieved</p>
+        </div>
+
+        <% if (images && images.length > 0) { %>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
+                <% images.forEach(image => { %>
+                    <figure style="margin: 0; background: var(--bg-card); border: 1px solid #333; border-radius: 8px; overflow: hidden;">
+                        <img src="/uploads/gallery/<%= encodeURIComponent(image.filename) %>" alt="<%= image.alt_text %>" loading="lazy" style="display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover;">
+                        <% if (image.title) { %><figcaption style="padding: 14px 16px; color: #fff; font-weight: 700;"><%= image.title %></figcaption><% } %>
+                    </figure>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 40px; text-align: center;">
+                <h2 style="color: #ff5500; margin-top: 0;">Gallery Coming Soon</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;">Upload your detailing photos from the admin Portfolio Gallery manager to display them here.</p>
+                <a href="/detailing" style="background-color: #ff5500; color: #fff; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Back to Detailing</a>
+            </div>
+        <% } %>
+
+        <section style="margin-top: 50px;">
+            <h2 style="color: #ff5500; text-align: center; margin-bottom: 40px;">Why Choose Apex Moto Detailing?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+                <div style="background: var(--bg-card); border: 1px solid #333; padding: 25px; border-radius: 8px;">
+                    <h3 style="color: #ff5500;">Premium Quality</h3>
+                    <p style="color: var(--text-muted);">We use only the highest quality detailing products and equipment. Multi-stage processes ensure your vehicle receives the best care.</p>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid #333; padding: 25px; border-radius: 8px;">
+                    <h3 style="color: #ff5500;">Expert Technicians</h3>
+                    <p style="color: var(--text-muted);">Our team has years of experience in automotive detailing. Every project receives meticulous attention to detail.</p>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid #333; padding: 25px; border-radius: 8px;">
+                    <h3 style="color: #ff5500;">Custom Solutions</h3>
+                    <p style="color: var(--text-muted);">Whether it's a motorcycle, car, or specialty vehicle, we tailor our services to meet your specific needs and budget.</p>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid #333; padding: 25px; border-radius: 8px;">
+                    <h3 style="color: #ff5500;">Long-Term Protection</h3>
+                    <p style="color: var(--text-muted);">Our ceramic coatings and protective treatments provide lasting defense against weather, dirt, and oxidation.</p>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid #333; padding: 25px; border-radius: 8px;">
+                    <h3 style="color: #ff5500;">Same-Day Service</h3>
+                    <p style="color: var(--text-muted);">Most treatments are completed in one day, so you can get back to enjoying your ride without downtime.</p>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid #333; padding: 25px; border-radius: 8px;">
+                    <h3 style="color: #ff5500;">Membership Benefits</h3>
+                    <p style="color: var(--text-muted);">Join our membership program for exclusive perks, priority booking, and ongoing maintenance packages.</p>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top: 50px; text-align: center;">
+            <h2 style="color: #ff5500; margin-bottom: 30px;">Ready to Transform Your Vehicle?</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px;">
+                Contact us today to book your detailing treatment or learn more about our membership programs.
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="/detailing#booking" style="background-color: #ff5500; color: #fff; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Book Now</a>
+                <a href="/detailing/memberships" style="background-color: transparent; color: #ff5500; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; border: 2px solid #ff5500;">View Memberships</a>
+            </div>
+        </section>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

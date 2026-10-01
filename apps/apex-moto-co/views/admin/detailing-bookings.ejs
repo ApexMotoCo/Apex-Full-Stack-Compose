@@ -1,0 +1,87 @@
+<%- include('../partials/header') %>
+
+<main class="py-5">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="color: #ff5500; margin: 0;">Detailing Bookings</h1>
+            <a href="/admin/detailing/bookings/export" style="background-color: #10b981; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9em; margin-right: 10px;">📥 Export CSV</a>
+            <a href="/admin" style="background-color: #ff5500; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">← Back to Admin</a>
+        </div>
+
+        <% if (bookings && bookings.length > 0) { %>
+            <div style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; overflow: hidden;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="background-color: #1a1a1a;">
+                        <tr>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Name</th>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Phone</th>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Vehicle</th>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Treatment</th>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Status</th>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Date</th>
+                            <th style="padding: 15px; text-align: center; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% bookings.forEach(booking => { %>
+                            <tr style="border-bottom: 1px solid #333;">
+                                <td style="padding: 15px; color: var(--text-muted);"><%= booking.name %></td>
+                                <td style="padding: 15px; color: var(--text-muted);"><%= booking.phone %></td>
+                                <td style="padding: 15px; color: var(--text-muted);"><%= booking.vehicle_year ? booking.vehicle_year + ' ' : '' %><%= booking.vehicle_make %> <%= booking.vehicle_model %></td>
+                                <td style="padding: 15px; color: var(--text-muted);" title="<%= booking.treatment %>"><%= booking.treatment.substring(0, 25) %>...</td>
+                                <td style="padding: 15px;">
+                                    <span style="background-color: <%= booking.status === 'Pending' ? '#ff5500' : '#10b981' %>; color: #fff; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.85em;"><%= booking.status %></span>
+                                </td>
+                                <td style="padding: 15px; color: var(--text-muted);"><%= booking.created_at ? new Date(booking.created_at).toLocaleDateString() : 'N/A' %></td>
+                                <td style="padding: 15px; text-align: center;">
+                                    <button onclick="updateStatus(<%= booking.id %>, 'Confirmed')" style="background-color: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-right: 5px;">Confirm</button>
+                                    <button onclick="deleteBooking(<%= booking.id %>)" style="background-color: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em;">Delete</button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 40px; text-align: center;">
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin: 0;">No detailing bookings yet.</p>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<script>
+async function updateStatus(bookingId, status) {
+    try {
+        const response = await fetch(`/admin/detailing/bookings/${bookingId}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        if (response.ok) {
+            location.reload();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error updating booking status');
+    }
+}
+
+async function deleteBooking(bookingId) {
+    if (confirm('Are you sure you want to delete this booking?')) {
+        try {
+            const response = await fetch(`/admin/detailing/bookings/${bookingId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error deleting booking');
+        }
+    }
+}
+</script>
+
+<%- include('../partials/footer') %>

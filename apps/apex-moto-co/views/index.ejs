@@ -1,0 +1,143 @@
+<%- include('./partials/header') %>
+
+<main>
+    <!-- Hero Section - Company Intro -->
+    <section style="min-height: calc(100vh - 90px); display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(255,85,0,0.1) 0%, rgba(5,5,5,0.5) 100%);">
+        <div class="container">
+            <h1 style="font-size: 4rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">
+                <span style="color: #fff;">Apex Moto</span> <span style="color: #ff5500;">&amp; Co</span>
+            </h1>
+            
+            <p style="font-size: 1.8rem; color: var(--text-muted); margin-bottom: 60px;">
+                Lifestyle. Detailing. Community.
+            </p>
+
+            <!-- Quick Access Menu -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 60px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                <a href="/detailing" class="btn" style="background-color: #ff5500; color: #fff; padding: 15px 20px; font-size: 1em; text-decoration: none; border-radius: 4px; text-transform: uppercase; font-weight: bold;">Detailing</a>
+                <a href="/store" class="btn" style="background-color: #ff5500; color: #fff; padding: 15px 20px; font-size: 1em; text-decoration: none; border-radius: 4px; text-transform: uppercase; font-weight: bold;">Store</a>
+                <a href="/services" class="btn" style="background-color: #ff5500; color: #fff; padding: 15px 20px; font-size: 1em; text-decoration: none; border-radius: 4px; text-transform: uppercase; font-weight: bold;">Services</a>
+                <a href="/contact" class="btn" style="background-color: #ff5500; color: #fff; padding: 15px 20px; font-size: 1em; text-decoration: none; border-radius: 4px; text-transform: uppercase; font-weight: bold;">Contact</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" style="padding: 80px 0; background-color: var(--bg-card);">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 60px; text-transform: uppercase; letter-spacing: 1px; color: #ff5500;">About Apex Moto & Co</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;">
+                <!-- Left: Collapsible Sections -->
+                <div>
+                    <!-- Who We Are -->
+                    <div style="margin-bottom: 20px; border: 2px solid #ff5500; border-radius: 4px; overflow: hidden;">
+                        <button onclick="toggleCollapsible(this)" style="width: 100%; padding: 20px; background: rgba(255,85,0,0.1); color: var(--text-main); border: none; cursor: pointer; text-align: left; font-weight: bold; text-transform: uppercase; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;">
+                            Who We Are
+                            <span style="font-size: 1.5em; color: #ff5500;">+</span>
+                        </button>
+                        <div style="display: none; padding: 25px; background: rgba(0,0,0,0.5); border-top: 2px solid #ff5500; color: var(--text-muted); line-height: 1.8; font-size: 1.05em;">
+                            Welcome to Apex Moto & Co., where passion for motorcycles meets professional excellence. We are a community-driven brand dedicated to delivering premium detailing services and lifestyle products for motorcycle and automotive enthusiasts.
+                        </div>
+                    </div>
+
+                    <!-- Our Journey -->
+                    <div style="margin-bottom: 20px; border: 2px solid #ff5500; border-radius: 4px; overflow: hidden;">
+                        <button onclick="toggleCollapsible(this)" style="width: 100%; padding: 20px; background: rgba(255,85,0,0.1); color: var(--text-main); border: none; cursor: pointer; text-align: left; font-weight: bold; text-transform: uppercase; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;">
+                            Our Journey
+                            <span style="font-size: 1.5em; color: #ff5500;">+</span>
+                        </button>
+                        <div style="display: none; padding: 25px; background: rgba(0,0,0,0.5); border-top: 2px solid #ff5500; color: var(--text-muted); line-height: 1.8; font-size: 1.05em;">
+                            What began as a passion project among friends has evolved into a thriving business. From humble beginnings to becoming a recognized name in the detailing world, our journey reflects our commitment to quality, innovation, and community. Every service, every product, every interaction is built on the foundation of trust and excellence.
+                        </div>
+                    </div>
+
+                    <!-- Our Mission -->
+                    <div style="border: 2px solid #ff5500; border-radius: 4px; overflow: hidden;">
+                        <button onclick="toggleCollapsible(this)" style="width: 100%; padding: 20px; background: rgba(255,85,0,0.1); color: var(--text-main); border: none; cursor: pointer; text-align: left; font-weight: bold; text-transform: uppercase; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;">
+                            Our Mission
+                            <span style="font-size: 1.5em; color: #ff5500;">+</span>
+                        </button>
+                        <div style="display: none; padding: 25px; background: rgba(0,0,0,0.5); border-top: 2px solid #ff5500; color: var(--text-muted); line-height: 1.8; font-size: 1.05em;">
+                            Our mission is to be the ultimate lifestyle destination for motorcycle and automotive enthusiasts. We strive to deliver world-class detailing services, premium products, and foster a vibrant community where passion and professionalism converge. We push boundaries, challenge standards, and inspire excellence in everything we do.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Video/Media Placeholder -->
+                <div style="background: rgba(255,85,0,0.05); border: 2px solid #ff5500; border-radius: 8px; padding: 40px; min-height: 500px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">▶️</div>
+                        <h3 style="color: #ff5500; font-size: 1.8rem; margin-bottom: 15px; text-transform: uppercase;">Latest Videos</h3>
+                        <p style="color: var(--text-muted); font-size: 1.1em; line-height: 1.6;">
+                            Check out our latest detailing transformations, tutorials, and behind-the-scenes content.
+                        </p>
+                        <div style="margin-top: 30px;">
+                            <p style="color: #ff5500; font-size: 1.2em; font-weight: bold;">YouTube Playlist Coming Soon</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Preview -->
+    <section style="padding: 80px 0; background: linear-gradient(135deg, rgba(255,85,0,0.05) 0%, rgba(5,5,5,0) 100%);">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 60px; text-transform: uppercase; letter-spacing: 1px;">What We Offer</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                <div style="background: var(--bg-card); padding: 30px; border-radius: 8px; border-left: 4px solid #ff5500; text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🚗</div>
+                    <h3 style="color: #ff5500; text-transform: uppercase; margin-bottom: 15px;">Detailing Services</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">Professional detailing for motorcycles, cars, and more. From paint correction to ceramic coatings.</p>
+                </div>
+
+                <div style="background: var(--bg-card); padding: 30px; border-radius: 8px; border-left: 4px solid #ff5500; text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🛍️</div>
+                    <h3 style="color: #ff5500; text-transform: uppercase; margin-bottom: 15px;">Premium Store</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">Curated selection of products, apparel, and lifestyle goods for enthusiasts like you.</p>
+                </div>
+
+                <div style="background: var(--bg-card); padding: 30px; border-radius: 8px; border-left: 4px solid #ff5500; text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">👥</div>
+                    <h3 style="color: #ff5500; text-transform: uppercase; margin-bottom: 15px;">Community</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">Join our passionate community of motorcycle and automotive enthusiasts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section style="padding: 80px 0; background-color: var(--bg-card); text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; color: #ff5500;">Ready to Experience Excellence?</h2>
+            <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Discover what sets us apart. Whether you're looking for premium detailing or lifestyle products, Apex Moto & Co. is your destination.
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="/detailing#booking" class="btn" style="background-color: #ff5500; color: #fff; padding: 15px 40px; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block; font-size: 1.1em;">Book Detailing</a>
+                <a href="/store" class="btn" style="background-color: transparent; color: #ff5500; padding: 15px 40px; text-decoration: none; font-weight: bold; border: 2px solid #ff5500; border-radius: 4px; display: inline-block; font-size: 1.1em;">Visit Store</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+function toggleCollapsible(button) {
+    const content = button.nextElementSibling;
+    const icon = button.querySelector('span');
+    
+    if (content.style.display === 'none' || !content.style.display) {
+        content.style.display = 'block';
+        icon.textContent = '−';
+        button.style.background = 'rgba(255, 85, 0, 0.2)';
+    } else {
+        content.style.display = 'none';
+        icon.textContent = '+';
+        button.style.background = 'rgba(255, 85, 0, 0.1)';
+    }
+}
+</script>
+
+<%- include('./partials/footer') %>

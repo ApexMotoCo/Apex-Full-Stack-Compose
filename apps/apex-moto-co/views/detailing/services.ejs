@@ -1,0 +1,264 @@
+<%- include('../partials/header') %>
+
+<style>
+    .servicing-hero { border-bottom: 1px solid rgba(255, 85, 0, 0.35); }
+    .servicing-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 245px;
+    }
+    .servicing-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-left: 3px solid transparent;
+        pointer-events: none;
+        transition: border-color 0.25s ease;
+    }
+    .servicing-card:hover::after { border-left-color: #ff5500; }
+    .service-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        margin-bottom: 12px;
+        border: 1px solid #ff5500;
+        border-radius: 50%;
+        color: #ff5500;
+        font-size: 0.8rem;
+        font-weight: 800;
+    }
+    @media (max-width: 600px) {
+        .servicing-card { min-height: 0; }
+    }
+</style>
+
+<main>
+    <!-- Hero Section -->
+    <section class="hero servicing-hero" aria-labelledby="servicing-title" style="min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(255,85,0,0.15) 0%, rgba(5,5,5,0) 60%); z-index: -1;"></div>
+        
+        <div class="container">
+            <h1 id="servicing-title" style="display: block !important; width: 100% !important; max-width: none !important; margin-left: auto !important; margin-right: auto !important; text-align: center !important; text-transform: uppercase; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,85,0,0.8), 0 0 20px rgba(255,85,0,0.5);">
+                <span style="color: #fff;">Basic Motorcycle</span> <span style="color: #ff5500;">Servicing</span>
+            </h1>
+            
+            <p style="font-size: 1.3rem; color: var(--text-muted); margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Professional routine maintenance to help keep your motorcycle running safely, reliably and at its best.
+            </p>
+
+            <p style="font-size: 1rem; color: #ff5500; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto; font-style: italic;">
+                Detail. Service. Protect.
+            </p>
+            <p style="font-size: 0.95rem; color: var(--text-muted); max-width: 760px; margin: 0 auto;">
+                Apex Moto Detailing provides basic motorcycle servicing and routine motorcycle maintenance.
+                This is not a full motorcycle repair workshop; every job is subject to inspection and assessment before acceptance.
+            </p>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="py-5" aria-labelledby="servicing-offer-title">
+        <div class="container">
+            <h2 id="servicing-offer-title" style="text-align: center; color: #ff5500; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 50px; font-size: 1.8rem;">Basic Motorcycle Servicing</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 60px; text-align: center;">
+                <!-- Oil & Filter -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">01</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">🛢️</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Engine Oil & Filter Changes</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Keep your engine lubricated with quality oil and fresh filters.</p>
+                </div>
+
+                <!-- Air Filter -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">02</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">💨</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Air Filter Replacement</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Ensure optimal engine breathing and performance.</p>
+                </div>
+
+                <!-- Spark Plugs -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">03</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">⚡</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Spark Plug Replacement</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Reliable ignition system maintenance for smooth running.</p>
+                </div>
+
+                <!-- Chain Service -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">04</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">🔗</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Chain Clean, Adjustment & Lubrication</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Keep your chain performing safely and smoothly.</p>
+                </div>
+
+                <!-- Brake Inspection -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">05</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">🛑</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Brake Inspection</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Safe, responsive braking is essential. We check and replace pads as needed.</p>
+                </div>
+
+                <!-- Brake Pad Replacement -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">06</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">🧱</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Brake Pad Replacement</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Replace worn pads following an inspection and suitability assessment.</p>
+                </div>
+
+                <!-- Coolant Service -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">07</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">🌡️</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Coolant Replacement / Top-Up</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Keep your engine running at optimal temperature.</p>
+                </div>
+
+                <!-- Brake Fluid -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">08</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">💧</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Brake Fluid Replacement</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Maintain responsive, reliable braking power.</p>
+                </div>
+
+                <!-- Battery Service -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">09</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">🔋</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Battery Testing & Replacement</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Reliable starting power when you need it.</p>
+                </div>
+
+                <!-- Electrical Checks -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">10</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">⚙️</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Basic Electrical Checks</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Lights, indicators and essential electrical components.</p>
+                </div>
+
+                <!-- Bulb Replacement -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">11</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">💡</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Bulb Replacement</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Stay visible and safe on the road with working lights.</p>
+                </div>
+
+                <!-- Tyre Checks -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">12</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">🛞</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Tyre Pressure & Condition</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Proper tyre maintenance is critical for safety and handling.</p>
+                </div>
+
+                <!-- Safety Inspection -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">13</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">✓</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">General Safety Inspection</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Comprehensive check to ensure your bike is road-ready.</p>
+                </div>
+
+                <!-- Pre-MOT -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">14</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">📋</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Pre-MOT Checks</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Get your motorcycle ready to pass its MOT test.</p>
+                </div>
+
+                <!-- Seasonal Checks -->
+                <div class="servicing-card" style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 30px; text-align: center; transition: all 0.3s ease; cursor: pointer;"
+                     onmouseover="this.style.borderColor='#ff5500'; this.style.boxShadow='0 10px 30px rgba(255,85,0,0.2)'; this.style.transform='translateY(-5px)'"
+                     onmouseout="this.style.borderColor='#333'; this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                    <span class="service-number">15</span><div style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true">❄️</div>
+                    <h3 style="color: #ff5500; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem;">Seasonal / Winter Checks</h3>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem;">Prepare your bike for seasonal changes and harsh weather.</p>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,85,0,0.1); border: 1px solid rgba(255,85,0,0.3); border-radius: 8px; padding: 25px; margin-bottom: 60px;">
+                <p style="color: var(--text-muted); margin: 0; text-align: center; font-size: 0.95rem;">
+                    <strong style="color: #ff5500;">Note:</strong> All services are subject to inspection and assessment. Some work may require further diagnosis before being accepted. We only recommend maintenance your motorcycle actually needs.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="py-5" style="background-color: var(--bg-card);">
+        <div class="container">
+            <h2 style="text-align: center; color: #ff5500; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 50px; font-size: 1.8rem;">Why Choose Apex Moto</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;">
+                <!-- Experienced -->
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px; color: #ff5500;">🔧</div>
+                    <h3 style="color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; font-size: 1.1rem;">Experienced & Precise</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin: 0;">Attention to detail in every job we do. Your motorcycle deserves professional care.</p>
+                </div>
+
+                <!-- Quality Parts -->
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px; color: #ff5500;">✓</div>
+                    <h3 style="color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; font-size: 1.1rem;">Quality Parts & Fluids</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin: 0;">We use trusted brands and quality products wherever possible.</p>
+                </div>
+
+                <!-- Efficient -->
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px; color: #ff5500;">⚡</div>
+                    <h3 style="color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; font-size: 1.1rem;">Efficient & Reliable</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin: 0;">Routine maintenance designed to get you back on the road fast.</p>
+                </div>
+
+                <!-- Honest Advice -->
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px; color: #ff5500;">💬</div>
+                    <h3 style="color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; font-size: 1.1rem;">Honest Advice</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin: 0;">We only recommend work your motorcycle actually needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5" style="background: linear-gradient(135deg, rgba(255,85,0,0.15) 0%, rgba(255,85,0,0.05) 100%);">
+        <div class="container text-center">
+            <h2 style="color: #fff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-size: 1.8rem;">Keep It Clean. Keep It Maintained. Keep It Riding.</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem;">
+                We don't just make your bike look good — we help keep it maintained and ready for the road.
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="/detailing#booking" class="btn" style="background-color: #ff5500; color: #fff; padding: 15px 40px; font-size: 1.1em; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block; transition: all 0.3s ease;" 
+                   onmouseover="this.style.backgroundColor='#e64900'; this.style.transform='scale(1.05)'"
+                   onmouseout="this.style.backgroundColor='#ff5500'; this.style.transform='scale(1)'">Book a Service</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<%- include('../partials/footer') %>

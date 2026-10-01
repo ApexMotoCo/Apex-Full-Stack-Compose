@@ -1,0 +1,11 @@
+<%-include('partials/header')%>
+
+<div class="container" style="max-width: 600px; margin: 100px auto; text-align: center;">
+    <div style="font-size: 4em; color: var(--primary); margin-bottom: 20px; font-weight: bold;"><%= typeof code !== 'undefined' ? code : '500' %></div>
+    <h1 style="margin: 20px 0; color: var(--text-main);"><%= typeof message !== 'undefined' ? message : 'An Error Occurred' %></h1>
+    <p style="color: var(--text-muted); margin-bottom: 30px;">The page you're looking for doesn't exist or an error occurred.</p>
+    
+    <a href="/" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #ff5500, #ff7722); color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Return to Home</a>
+</div>
+
+<%-include('partials/footer')%>

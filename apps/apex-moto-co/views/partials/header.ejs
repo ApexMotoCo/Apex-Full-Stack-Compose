@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ApexMoto&Co">
+    <meta name="theme-color" content="#111111">
+    <title><%= pageTitle || 'ApexMoto&Co' %></title>
+    <meta name="description" content="<%= metaDescription || 'Apex Moto & Co. motorcycle lifestyle, detailing, store and servicing.' %>">
+    <link rel="canonical" href="<%= canonicalUrl || 'https://apexingoodcompany.co.uk/' %>">
+    <% if (isPublicPage === false) { %><meta name="robots" content="noindex,nofollow"><% } %>
+    <meta property="og:title" content="<%= pageTitle || 'ApexMoto&Co' %>">
+    <meta property="og:description" content="<%= metaDescription || 'Apex Moto & Co. motorcycle lifestyle, detailing, store and servicing.' %>">
+    <meta property="og:url" content="<%= canonicalUrl || 'https://apexingoodcompany.co.uk/' %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ApexMoto&Co">
+    <link rel="icon" type="image/png" href="/images/ChatGPT%20Image%20Aug%2025,%202026,%2006_46_28%20PM.png">
+    <link rel="apple-touch-icon" href="/images/ChatGPT%20Image%20Aug%2025,%202026,%2006_46_28%20PM.png">
+    <% if (isPublicPage !== false) { %>
+    <script type="application/ld+json">
+        <%- JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'ApexMoto&Co',
+            url: 'https://apexingoodcompany.co.uk/',
+            logo: 'https://apexingoodcompany.co.uk/images/ChatGPT%20Image%20Aug%2025,%202026,%2006_46_28%20PM.png'
+        }) %>
+    </script>
+    <% } %>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/mobile.css">
+    <link rel="stylesheet" href="/css/ios-fixes.css">
+    <link rel="stylesheet" href="/css/hologram.css">
+    <link rel="stylesheet" href="/mobile-responsive.css">
+    <link rel="stylesheet" href="/css/mobile-menu-fix.css">
+    <link rel="stylesheet" href="/css/chatbot.css?v=3">
+</head>
+<body class="<%= isPublicPage === false ? 'admin-shell' : 'site-shell' %>">
+    <!-- Hologram Background Effects -->
+    <div class="hologram-background"></div>
+    <div class="hologram-glow-overlay"></div>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="/" class="logo" style="display: flex; align-items: center; font-size: unset !important;">
+                <img src="/images/ChatGPT Image Aug 25, 2026, 06_46_28 PM.png" alt="ApexMoto&Co" style="height: 100px; width: auto;">
+            </a>
+
+            <button class="menu-toggle" id="mobile-menu" type="button" aria-label="Toggle navigation" aria-controls="site-navigation" aria-expanded="false" style="z-index: 2000; pointer-events: auto; position: relative;">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
+            <nav class="nav-links" id="site-navigation">
+                <a href="/store">Store</a>
+                <a href="/detailing">Detailing</a>
+                <a href="/services">Services</a>
+                <a href="/events">Events</a>
+                <a href="/contact">Contact Us</a>
+                <% if (user) { %>
+                    <% if (user.role === 'admin') { %>
+                        <a href="/admin" class="nav-btn" style="background: var(--warning); color: #000;">⚙️ Admin</a>
+                    <% } %>
+                    <a href="/profile" class="nav-btn-alt">👤 Profile</a>
+                    <a href="/logout" class="nav-btn-alt">Logout <%= user.username || user.email %></a>
+                <% } else { %>
+                    <a href="/login" class="nav-btn-alt">Log In</a>
+                    <a href="/register" class="nav-btn">Register</a>
+                <% } %>
+            </nav>
+        </div>
+    </header>
+
+    <script src="/js/burger-menu.js"></script>
+    <%- include('./chatbot') %>
+    <script src="/js/chatbot.js?v=3"></script>
