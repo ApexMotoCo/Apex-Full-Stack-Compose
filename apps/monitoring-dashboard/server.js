@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const https = require('https');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const jwt = require('jsonwebtoken');
@@ -258,42 +259,82 @@ const services = [
   { name: 'Website', url: 'http://apex-moto-co-web:3000/health', health_endpoint: 'http://apex-moto-co-web:3000' },
   { name: 'Asset Backend', url: 'http://asset-management-backend:8000/health', health_endpoint: 'http://asset-management-backend:8000' },
   { name: 'Asset Frontend', url: 'http://apex-frontend:3000', health_endpoint: 'http://apex-frontend:3000' },
-  { name: 'VPN Service', url: 'http://apex-openvpn:943/health', health_endpoint: 'http://apex-openvpn:943' }
+  { name: 'VPN Service', url: 'https://apex-openvpn:943/', health_endpoint: 'https://apex-openvpn:943/' }
 ];
 
 // Health check function
 async function checkService(service) {
   const startTime = Date.now();
+
   try {
-    const response = await axios.get(service.url, { timeout: 5000 });
+    const axiosOptions = {
+      timeout: 5000
+    };
+
+    // OpenVPN Access Server uses HTTPS on port 943
+    // and may use an internal/self-signed certificate.
+    if (service.url.startsWith('https://')) {
+      axiosOptions.httpsAgent = new https.Agent({
+        rejectUnauthorized: false
+      });
+    }
+
+    const response = await axios.get(service.url, axiosOptions);
     const responseTime = Date.now() - startTime;
-    
+
     db.run(
       `UPDATE service_status 
        SET status = ?, last_check = datetime('now'), response_time = ?
        WHERE service_name = ?`,
-      [response.status === 200 ? 'online' : 'degraded', responseTime, service.name]
+      [
+        response.status === 200 ? 'online' : 'degraded',
+        responseTime,
+        service.name
+      ]
     );
 
-    return { status: 'online', responseTime };
+    return {
+      status: 'online',
+      responseTime
+    };
+
   } catch (error) {
     const responseTime = Date.now() - startTime;
     const errorMsg = error.message || 'Unknown error';
-    
+
     db.run(
       `UPDATE service_status 
-       SET status = ?, last_check = datetime('now'), error_count = error_count + 1, last_error = ?, response_time = ?
+       SET status = ?,
+           last_check = datetime('now'),
+           error_count = error_count + 1,
+           last_error = ?,
+           response_time = ?
        WHERE service_name = ?`,
-      ['offline', errorMsg, responseTime, service.name]
+      [
+        'offline',
+        errorMsg,
+        responseTime,
+        service.name
+      ]
     );
 
     db.run(
-      `INSERT INTO error_logs (service_name, error_message, status_code, timestamp, response_time)
+      `INSERT INTO error_logs
+       (service_name, error_message, status_code, timestamp, response_time)
        VALUES (?, ?, ?, datetime('now'), ?)`,
-      [service.name, errorMsg, error.response?.status || 0, responseTime]
+      [
+        service.name,
+        errorMsg,
+        error.response?.status || 0,
+        responseTime
+      ]
     );
 
-    return { status: 'offline', error: errorMsg, responseTime };
+    return {
+      status: 'offline',
+      error: errorMsg,
+      responseTime
+    };
   }
 }
 
