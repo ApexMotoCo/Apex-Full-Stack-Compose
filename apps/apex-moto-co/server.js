@@ -1344,7 +1344,7 @@ app.post(
 // ============================================================
 
 app.get('/store', (req, res) => {
-  res.render('store');
+  res.redirect(302, 'https://apexapparelsupply.myshopify.com/');
 });
 
 app.get('/admin/store', requireAdmin, (req, res) => {
