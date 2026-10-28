@@ -11,6 +11,28 @@
                 <a href="/about">About Us</a>
             </div>
 
+            <% if (isPublicPage !== false) { %>
+            <section class="newsletter-signup" id="newsletter" aria-labelledby="newsletter-heading">
+                <h2 id="newsletter-heading">Get Apex Moto & Co updates</h2>
+                <p>Be first to hear about new products, events and offers.</p>
+                <% if (newsletterStatus === 'success') { %>
+                    <p class="newsletter-status" role="status">Thanks for signing up. You can unsubscribe from any email.</p>
+                <% } else if (newsletterStatus === 'error') { %>
+                    <p class="newsletter-status newsletter-status--error" role="alert">Enter a valid email address and tick the consent box to sign up.</p>
+                <% } %>
+                <form class="newsletter-form" method="POST" action="/marketing/subscribe">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <label class="visually-hidden" for="newsletter-email">Email address</label>
+                    <input id="newsletter-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+                    <label class="newsletter-consent">
+                        <input type="checkbox" name="marketing_consent" required>
+                        <span>Yes, email me news, offers and marketing updates. I can unsubscribe at any time. See our <a href="/privacy">Privacy Policy</a>.</span>
+                    </label>
+                    <button class="btn btn-primary" type="submit">Sign me up</button>
+                </form>
+            </section>
+            <% } %>
+
             <!-- Legal Links -->
             <div class="site-footer-legal">
                 <a href="/privacy">Privacy Policy</a>

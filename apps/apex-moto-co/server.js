@@ -15,6 +15,12 @@ const { logAction } = require('./services/audit');
 const { csrfProtection, validateCSRF } = require('./middleware/csrf');
 const { requestLogger } = require('./middleware/request-logger');
 const {
+  getOptedInRecipientCount,
+  sendMarketingCampaign,
+  sendDueMarketingCampaigns,
+  verifyUnsubscribeToken
+} = require('./services/marketing-campaigns');
+const {
   generateMarketingDraft,
   validateMarketingBrief
 } = require('./services/marketing-assistant');
@@ -47,6 +53,7 @@ if (!process.env.SESSION_SECRET) {
 const db = new sqlite3.Database(
   path.join(__dirname, 'data', 'database.db')
 );
+db.configure('busyTimeout', 5000);
 const galleryDirectory = path.join(__dirname, 'data', 'gallery');
 fs.mkdirSync(galleryDirectory, { recursive: true });
 const galleryUpload = multer({
@@ -145,6 +152,9 @@ app.use((req, res, next) => {
   res.locals.metaDescription = pageMetadata[1];
   res.locals.canonicalUrl = `https://apexingoodcompany.co.uk${req.path === '/' ? '/' : req.path}`;
   res.locals.isPublicPage = !req.path.startsWith('/admin');
+  res.locals.newsletterStatus = ['success', 'error'].includes(req.query.newsletter)
+    ? req.query.newsletter
+    : '';
   next();
 });
 
@@ -163,6 +173,7 @@ app.set('views', path.join(__dirname, 'views'));
 // ============================================================
 
 function initDB() {
+  db.serialize(() => {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
@@ -177,6 +188,34 @@ function initDB() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS marketing_campaigns (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      body TEXT NOT NULL,
+      scheduled_at DATETIME,
+      status TEXT NOT NULL DEFAULT 'draft',
+      recipient_count INTEGER NOT NULL DEFAULT 0,
+      sent_count INTEGER NOT NULL DEFAULT 0,
+      failure_count INTEGER NOT NULL DEFAULT 0,
+      last_error TEXT,
+      created_by INTEGER,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      sent_at DATETIME,
+      FOREIGN KEY(created_by) REFERENCES users(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS marketing_subscribers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+      consented_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      unsubscribed_at DATETIME
+    )
+  `);
+
   db.run(
     `ALTER TABLE users ADD COLUMN last_login DATETIME`,
     (err) => {
@@ -185,6 +224,18 @@ function initDB() {
       }
     }
   );
+
+  [
+    ['marketing_consent', 'INTEGER NOT NULL DEFAULT 0'],
+    ['marketing_consent_at', 'DATETIME'],
+    ['marketing_unsubscribed_at', 'DATETIME']
+  ].forEach(([column, definition]) => {
+    db.run(`ALTER TABLE users ADD COLUMN ${column} ${definition}`, (err) => {
+      if (err && !err.message.includes('duplicate column name')) {
+        console.error(`Unable to add users.${column}:`, err.message);
+      }
+    });
+  });
 
   db.run(`
     CREATE TABLE IF NOT EXISTS contact_messages (
@@ -309,6 +360,7 @@ function initDB() {
       `INSERT OR IGNORE INTO users (username, password, email, role) VALUES (?, ?, ?, ?)`,
       [username, bcrypt.hashSync(password, 10), email, 'admin']
     );
+  });
   });
 }
 
@@ -448,7 +500,244 @@ function requireLogin(req, res, next) {
 // ============================================================
 
 app.get('/admin/marketing-assistant', requireAdmin, (req, res) => {
-  res.render('admin/marketing-assistant');
+  getOptedInRecipientCount(db)
+    .then((recipientCount) => {
+      res.render('admin/marketing-assistant', { recipientCount });
+    })
+    .catch((error) => {
+      console.error('Unable to count opted-in marketing recipients:', error.message);
+      res.status(500).render('error', { message: 'Unable to load the marketing assistant.' });
+    });
+});
+
+app.get('/admin/marketing-campaigns', requireAdmin, (req, res) => {
+  db.all(
+    `SELECT id, name, subject, body, scheduled_at, status, recipient_count,
+            sent_count, failure_count, last_error, created_at, sent_at
+     FROM marketing_campaigns
+     ORDER BY created_at DESC
+     LIMIT 50`,
+    (err, campaigns) => {
+      if (err) {
+        console.error('Unable to load marketing campaigns:', err.message);
+        return res.status(500).render('error', { message: 'Unable to load marketing campaigns.' });
+      }
+      getOptedInRecipientCount(db)
+        .then((recipientCount) => {
+          res.render('admin/marketing-campaigns', {
+            campaigns: campaigns || [],
+            recipientCount
+          });
+        })
+        .catch((countError) => {
+          console.error('Unable to count opted-in marketing recipients:', countError.message);
+          res.status(500).render('error', { message: 'Unable to load marketing campaigns.' });
+        });
+    }
+  );
+});
+
+app.post('/admin/marketing-campaigns', requireAdmin, validateCSRF, async (req, res) => {
+  const { name, subject, body, scheduledAt, action } = req.body || {};
+  if (typeof name !== 'string' || typeof subject !== 'string' || typeof body !== 'string' ||
+      typeof action !== 'string' || !['draft', 'schedule'].includes(action)) {
+    return res.status(400).json({ error: 'Complete the campaign name, subject, content and action.' });
+  }
+
+  const campaignName = name.trim();
+  const campaignSubject = subject.trim();
+  const campaignBody = body.trim();
+  if (!campaignName || campaignName.length > 120 || !campaignSubject ||
+      campaignSubject.length > 200 || !campaignBody || campaignBody.length > 20000) {
+    return res.status(400).json({ error: 'Check the campaign field lengths and make sure no required fields are empty.' });
+  }
+
+  let scheduledDate = null;
+  if (action === 'schedule') {
+    scheduledDate = new Date(scheduledAt);
+    if (!scheduledAt || Number.isNaN(scheduledDate.getTime()) ||
+        scheduledDate.getTime() < Date.now() + 5 * 60 * 1000) {
+      return res.status(400).json({ error: 'Choose a send time at least five minutes in the future.' });
+    }
+  }
+
+  try {
+    const recipientCount = await getOptedInRecipientCount(db);
+    if (recipientCount < 1) {
+      return res.status(400).json({ error: 'There are no opted-in email subscribers yet.' });
+    }
+    const status = action === 'schedule' ? 'scheduled' : 'draft';
+    const scheduledAtUtc = scheduledDate ? scheduledDate.toISOString() : null;
+    db.run(
+      `INSERT INTO marketing_campaigns
+       (name, subject, body, scheduled_at, status, recipient_count, created_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [campaignName, campaignSubject, campaignBody, scheduledAtUtc, status, recipientCount, req.session.user.id],
+      function (err) {
+        if (err) {
+          console.error('Unable to save marketing campaign:', err.message);
+          return res.status(500).json({ error: 'Unable to save this campaign.' });
+        }
+        return res.status(201).json({
+          id: this.lastID,
+          status,
+          recipientCount,
+          message: status === 'scheduled' ? 'Campaign scheduled.' : 'Campaign saved as a draft.'
+        });
+      }
+    );
+  } catch (error) {
+    console.error('Unable to prepare marketing campaign:', error.message);
+    return res.status(500).json({ error: 'Unable to prepare this campaign.' });
+  }
+});
+
+app.post(
+  '/admin/marketing-campaigns/:id/send',
+  requireAdmin,
+  marketingAssistantLimiter,
+  validateCSRF,
+  async (req, res) => {
+    const campaignId = Number(req.params.id);
+    if (!Number.isSafeInteger(campaignId) || campaignId < 1) {
+      return res.status(400).json({ error: 'Invalid campaign.' });
+    }
+    try {
+      await sendMarketingCampaign(db, campaignId);
+      return res.json({ message: 'Campaign sending has finished.' });
+    } catch (error) {
+      if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+      console.error('Marketing campaign send failed:', error.message);
+      return res.status(500).json({ error: 'Unable to send this campaign.' });
+    }
+  }
+);
+
+app.post('/admin/marketing-campaigns/:id/cancel', requireAdmin, validateCSRF, (req, res) => {
+  const campaignId = Number(req.params.id);
+  if (!Number.isSafeInteger(campaignId) || campaignId < 1) {
+    return res.status(400).json({ error: 'Invalid campaign.' });
+  }
+  db.run(
+    `UPDATE marketing_campaigns
+     SET status = 'cancelled', scheduled_at = NULL
+     WHERE id = ? AND status = 'scheduled'`,
+    [campaignId],
+    function (err) {
+      if (err) {
+        console.error('Unable to cancel marketing campaign:', err.message);
+        return res.status(500).json({ error: 'Unable to cancel this campaign.' });
+      }
+      if (!this.changes) return res.status(409).json({ error: 'This campaign is no longer scheduled.' });
+      return res.json({ message: 'Scheduled campaign cancelled.' });
+    }
+  );
+});
+
+app.get('/unsubscribe/:token', (req, res) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  const validToken = verifyUnsubscribeToken(req.params.token);
+  if (!validToken) {
+    return res.status(400).render('marketing-unsubscribe', { token: '', invalid: true, success: false });
+  }
+  db.get(
+    `SELECT id FROM users
+     WHERE id = ? AND marketing_consent = 1 AND marketing_consent_at = ?`,
+    [validToken.userId, validToken.consentedAt],
+    (err, user) => {
+      if (err) {
+        console.error('Unable to check marketing unsubscribe:', err.message);
+        return res.status(500).render('error', { message: 'Unable to process this unsubscribe request.' });
+      }
+      if (!user) return res.render('marketing-unsubscribe', { token: '', invalid: true, success: false });
+      return res.render('marketing-unsubscribe', { token: req.params.token, invalid: false, success: false });
+    }
+  );
+});
+
+app.post('/unsubscribe/:token', (req, res) => {
+  const validToken = verifyUnsubscribeToken(req.params.token);
+  if (!validToken) return res.status(400).render('marketing-unsubscribe', { token: '', invalid: true, success: false });
+
+  const unsubscribe = validToken.source === 'subscriber'
+    ? {
+      sql: `UPDATE marketing_subscribers
+            SET unsubscribed_at = CURRENT_TIMESTAMP
+            WHERE id = ? AND consented_at = ? AND unsubscribed_at IS NULL`,
+      params: [validToken.userId, validToken.consentedAt]
+    }
+    : {
+      sql: `UPDATE users
+            SET marketing_consent = 0, marketing_unsubscribed_at = CURRENT_TIMESTAMP
+            WHERE id = ? AND marketing_consent = 1 AND marketing_consent_at = ?`,
+      params: [validToken.userId, validToken.consentedAt]
+    };
+
+  db.run(unsubscribe.sql, unsubscribe.params, function (err) {
+    if (err) {
+      console.error('Unable to update marketing consent:', err.message);
+      return res.status(500).render('error', { message: 'Unable to process this unsubscribe request.' });
+    }
+    return res.render('marketing-unsubscribe', {
+      token: '',
+      invalid: !this.changes,
+      success: Boolean(this.changes)
+    });
+  });
+});
+
+app.post('/marketing/subscribe', validateCSRF, (req, res) => {
+  const email = typeof req.body.email === 'string' ? req.body.email.trim() : '';
+  const consent = req.body.marketing_consent === 'on';
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || email.length > 254 || !emailPattern.test(email) || !consent) {
+    return res.redirect('/?newsletter=error#newsletter');
+  }
+
+  db.get(
+    'SELECT id FROM users WHERE lower(trim(email)) = lower(trim(?)) ORDER BY id LIMIT 1',
+    [email],
+    (lookupError, user) => {
+      if (lookupError) {
+        console.error('Unable to check marketing signup:', lookupError.message);
+        return res.status(500).render('error', { message: 'Unable to process your signup right now.' });
+      }
+
+      if (user) {
+        return db.run(
+          `UPDATE users
+           SET marketing_consent = 1, marketing_consent_at = CURRENT_TIMESTAMP,
+               marketing_unsubscribed_at = NULL
+           WHERE id = ?`,
+          [user.id],
+          (updateError) => {
+            if (updateError) {
+              console.error('Unable to save marketing signup:', updateError.message);
+              return res.status(500).render('error', { message: 'Unable to process your signup right now.' });
+            }
+            return res.redirect('/?newsletter=success#newsletter');
+          }
+        );
+      }
+
+      db.run(
+        `INSERT INTO marketing_subscribers (email, consented_at, unsubscribed_at)
+         VALUES (?, CURRENT_TIMESTAMP, NULL)
+         ON CONFLICT(email) DO UPDATE SET
+           consented_at = CURRENT_TIMESTAMP,
+           unsubscribed_at = NULL`,
+        [email],
+        (insertError) => {
+          if (insertError) {
+            console.error('Unable to save marketing signup:', insertError.message);
+            return res.status(500).render('error', { message: 'Unable to process your signup right now.' });
+          }
+          return res.redirect('/?newsletter=success#newsletter');
+        }
+      );
+    }
+  );
 });
 
 app.post(
@@ -730,12 +1019,14 @@ app.get('/register', (req, res) => {
 
 app.post(
   '/register',
+  validateCSRF,
   async (req, res) => {
 
     const {
       username,
       email,
-      password
+      password,
+      marketing_consent
     } = req.body;
 
     if (
@@ -762,14 +1053,16 @@ app.post(
       db.run(
         `
           INSERT INTO users
-          (username, email, password, role)
-          VALUES (?, ?, ?, ?)
+          (username, email, password, role, marketing_consent, marketing_consent_at)
+          VALUES (?, ?, ?, ?, ?, CASE WHEN ? = 1 THEN CURRENT_TIMESTAMP ELSE NULL END)
         `,
         [
           username,
           email,
           hashedPassword,
-          'user'
+          'user',
+          marketing_consent === 'on' ? 1 : 0,
+          marketing_consent === 'on' ? 1 : 0
         ],
         err => {
 
@@ -2636,6 +2929,15 @@ app.use((req, res) => {
   );
 
 });
+
+const marketingCampaignScheduler = setInterval(() => {
+  sendDueMarketingCampaigns(db).catch((error) => {
+    console.error('Scheduled marketing campaign check failed:', error.message);
+  });
+}, 60 * 1000);
+if (typeof marketingCampaignScheduler.unref === 'function') {
+  marketingCampaignScheduler.unref();
+}
 
 // ============================================================
 // START SERVER

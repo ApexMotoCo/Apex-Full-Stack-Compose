@@ -5,6 +5,7 @@ const fs = require('fs');
 const dataDirectory = path.join(__dirname, '../data');
 fs.mkdirSync(dataDirectory, { recursive: true });
 const db = new sqlite3.Database(path.join(dataDirectory, 'database.db'));
+db.configure('busyTimeout', 5000);
 
 function ensureAuditSchema() {
   db.run(`CREATE TABLE IF NOT EXISTS audit_logs (

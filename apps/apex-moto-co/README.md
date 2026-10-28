@@ -147,6 +147,8 @@ ADMIN_PASSWORD_2=use-a-strong-password
 
 The marketing copilot uses the OpenAI API from the server. Keep `OPENAI_API_KEY` private; for the root Docker Compose stack, set it in the root `.env` file so it is passed to the Apex Moto & Co web container. Drafts are suggestions and should be checked for accuracy before publishing.
 
+Email marketing campaigns can be saved as drafts, sent after an admin confirmation, or scheduled by an admin. Visitors can sign up using the marketing form in the site footer; account holders can also actively select the optional marketing checkbox at registration. Existing accounts are not opted in automatically. Each message contains an unsubscribe link. The root Docker Compose stack must pass `SESSION_SECRET` and the SMTP settings (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASSWORD`, and optionally `EMAIL_FROM`) to enable campaign delivery. Scheduled email campaigns are processed by the web app while it is running. Social posts remain copyable drafts until official platform account connections are configured.
+
 ---
 
 ## Architecture
