@@ -155,6 +155,9 @@ app.use((req, res, next) => {
   res.locals.newsletterStatus = ['success', 'error'].includes(req.query.newsletter)
     ? req.query.newsletter
     : '';
+  res.locals.profileMarketingStatus = ['updated', 'missing-email', 'error'].includes(req.query.marketing)
+    ? req.query.marketing
+    : '';
   next();
 });
 
@@ -494,6 +497,47 @@ function requireLogin(req, res, next) {
 
   next();
 }
+
+app.get('/profile', requireLogin, (req, res) => {
+  res.render('profile', { user: req.session.user });
+});
+
+app.post('/profile/marketing-preference', requireLogin, validateCSRF, (req, res) => {
+  const wantsMarketing = req.body.marketing_consent === 'on';
+  const userId = req.session.user.id;
+
+  if (wantsMarketing && !String(req.session.user.email || '').trim()) {
+    return res.redirect('/profile?marketing=missing-email#marketing-preferences');
+  }
+
+  const query = wantsMarketing
+    ? `UPDATE users
+       SET marketing_consent = 1,
+           marketing_consent_at = CASE
+             WHEN marketing_consent = 1 AND marketing_consent_at IS NOT NULL
+             THEN marketing_consent_at
+             ELSE CURRENT_TIMESTAMP
+           END,
+           marketing_unsubscribed_at = NULL
+       WHERE id = ?`
+    : `UPDATE users
+       SET marketing_consent = 0,
+           marketing_unsubscribed_at = CASE
+             WHEN marketing_consent = 1 THEN CURRENT_TIMESTAMP
+             ELSE marketing_unsubscribed_at
+           END
+       WHERE id = ?`;
+
+  db.run(query, [userId], function (error) {
+    if (error) {
+      console.error('Unable to update marketing preference:', error.message);
+      return res.redirect('/profile?marketing=error#marketing-preferences');
+    }
+
+    req.session.user.marketing_consent = wantsMarketing ? 1 : 0;
+    return res.redirect('/profile?marketing=updated#marketing-preferences');
+  });
+});
 
 // ============================================================
 // ADMIN MARKETING ASSISTANT
