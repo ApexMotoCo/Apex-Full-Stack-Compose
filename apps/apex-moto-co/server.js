@@ -1534,6 +1534,13 @@ app.get(
       `,
       (err, bookings) => {
 
+        if (err) {
+          console.error('Unable to load detailing bookings:', err.message);
+          return res.status(500).render('error', {
+            message: 'Unable to load detailing bookings.'
+          });
+        }
+
         res.render(
           'admin/detailing-bookings',
           {
