@@ -17,7 +17,9 @@ function requestLogger(req, res, next) {
   req.requestId = requestId;
   res.setHeader('X-Request-ID', requestId);
   const method = req.method;
-  const requestPath = req.path;  // Renamed to avoid shadowing the path module
+  const requestPath = req.path.startsWith('/unsubscribe/')
+    ? '/unsubscribe/[token]'
+    : req.path;
   const ip = req.ip;
   
   res.on('finish', () => {
@@ -56,8 +58,8 @@ function requestLogger(req, res, next) {
         user.id,
         user.username || user.email || 'Guest',
         isStateChange ? `${method.toLowerCase()}_request` : 'page_view',
-        req.path,
-        isStateChange ? `${method} ${req.path} returned ${status}` : 'Page viewed',
+        requestPath,
+        isStateChange ? `${method} ${requestPath} returned ${status}` : 'Page viewed',
         ip,
         {
           requestId,

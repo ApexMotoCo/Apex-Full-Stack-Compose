@@ -851,6 +851,75 @@ header a { color: #ffffff !important; }
     margin-bottom: 0;
 }
 
+.newsletter-signup {
+    max-width: 620px;
+    margin: 0 auto 34px;
+    padding: 28px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: #101316;
+    text-align: center;
+}
+
+.newsletter-signup h2 {
+    margin: 0 0 8px;
+    color: var(--text-main);
+    font-size: 1.35rem;
+}
+
+.newsletter-signup > p {
+    margin: 0 0 18px;
+}
+
+.newsletter-status {
+    color: #86efac;
+}
+
+.newsletter-status--error {
+    color: #fca5a5;
+}
+
+.newsletter-form {
+    display: grid;
+    gap: 12px;
+    text-align: left;
+}
+
+.newsletter-form > input[type="email"] {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #080a0c;
+    color: var(--text-main);
+    font: inherit;
+}
+
+.newsletter-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+.newsletter-consent input {
+    flex-shrink: 0;
+    margin-top: 4px;
+    accent-color: var(--primary);
+}
+
+.newsletter-consent a {
+    color: var(--primary);
+}
+
+.newsletter-form .btn {
+    justify-self: start;
+}
+
 .site-footer-links,
 .site-footer-legal {
     display: flex;

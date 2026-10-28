@@ -11,6 +11,14 @@
     gap: 20px;
 }
 
+.marketing-assistant-output-heading > div {
+    margin-right: auto;
+}
+
+.marketing-assistant-output-heading button {
+    flex-shrink: 0;
+}
+
 .marketing-assistant-heading {
     margin-bottom: 28px;
     padding-bottom: 20px;
@@ -117,6 +125,116 @@
     line-height: 1.7;
 }
 
+.marketing-campaign-composer {
+    margin-top: 24px;
+}
+
+.marketing-campaign-composer h2 {
+    margin: 0;
+}
+
+.marketing-campaign-composer label {
+    display: block;
+    margin: 14px 0 6px;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.marketing-campaign-composer input,
+.marketing-campaign-composer textarea {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 11px 12px;
+    background: #0a0a0a;
+    color: var(--text-main);
+    font: inherit;
+}
+
+.marketing-campaign-composer input:focus,
+.marketing-campaign-composer textarea:focus {
+    border-color: var(--primary);
+    outline: 2px solid rgba(255, 85, 0, 0.2);
+}
+
+.marketing-campaign-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.marketing-campaign-list {
+    display: grid;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.marketing-campaign-card {
+    padding: 18px;
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    background: var(--bg-main);
+}
+
+.marketing-campaign-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.marketing-campaign-card h3 {
+    margin: 0 0 5px;
+}
+
+.marketing-campaign-card p {
+    margin: 6px 0;
+}
+
+.marketing-campaign-status {
+    border-radius: 999px;
+    padding: 4px 10px;
+    background: #333;
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.marketing-campaign-status--sent {
+    background: #064e3b;
+}
+
+.marketing-campaign-status--partial,
+.marketing-campaign-status--failed {
+    background: #7f1d1d;
+}
+
+.marketing-campaign-status--scheduled {
+    background: #1e3a8a;
+}
+
+.marketing-campaign-status--cancelled {
+    background: #444;
+}
+
+.marketing-campaign-error {
+    color: #fca5a5;
+    font-size: 0.9rem;
+}
+
+.marketing-unsubscribe-page {
+    max-width: 640px;
+    margin: 50px auto;
+}
+
+.marketing-unsubscribe-page h1 {
+    color: var(--text-main);
+}
+
 @media (max-width: 760px) {
     .marketing-assistant-heading,
     .marketing-assistant-output-heading {
@@ -133,5 +251,9 @@
 
     .marketing-assistant-output {
         min-height: 280px;
+    }
+
+    .marketing-campaign-card-heading {
+        flex-direction: column;
     }
 }

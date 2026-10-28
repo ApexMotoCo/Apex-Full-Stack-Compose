@@ -12,6 +12,7 @@
         <% } %>
 
         <form method="POST" style="margin-top: 30px;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" placeholder="johndoe" required>
 
@@ -20,6 +21,11 @@
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="••••••••" required>
+
+            <label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 16px; color: var(--text-muted); font-weight: 400;">
+                <input type="checkbox" name="marketing_consent" style="width: auto; margin-top: 5px;">
+                <span>Yes, email me Apex Moto & Co news, offers and marketing updates. I can unsubscribe at any time. This is optional and is not required to create an account.</span>
+            </label>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Register</button>
         </form>

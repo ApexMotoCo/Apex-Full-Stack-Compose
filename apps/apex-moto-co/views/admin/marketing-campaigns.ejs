@@ -1,0 +1,61 @@
+<%- include('../partials/header') %>
+
+<link rel="stylesheet" href="/css/marketing-assistant.css">
+<main class="container marketing-assistant" data-marketing-campaigns data-csrf-token="<%= csrfToken %>">
+    <div class="marketing-assistant-heading">
+        <div>
+            <p class="marketing-assistant-eyebrow">APEX MOTO & CO · ADMIN TOOLS</p>
+            <h1>Email campaigns</h1>
+            <p><strong><%= recipientCount %></strong> opted-in account holders are currently eligible to receive marketing emails.</p>
+        </div>
+        <a href="/admin/marketing-assistant" class="btn btn-warning">← Marketing copilot</a>
+    </div>
+
+    <section class="admin-panel">
+        <h2>Campaign history</h2>
+        <% if (campaigns.length) { %>
+            <div class="marketing-campaign-list">
+                <% campaigns.forEach(campaign => { %>
+                    <article class="marketing-campaign-card">
+                        <div class="marketing-campaign-card-heading">
+                            <div>
+                                <h3><%= campaign.name %></h3>
+                                <p><strong>Subject:</strong> <%= campaign.subject %></p>
+                            </div>
+                            <span class="marketing-campaign-status marketing-campaign-status--<%= campaign.status %>"><%= campaign.status %></span>
+                        </div>
+                        <p class="marketing-assistant-note">
+                            <% if (campaign.status === 'scheduled' && campaign.scheduled_at) { %>
+                                Scheduled for <%= new Date(campaign.scheduled_at).toLocaleString('en-GB') %>.
+                            <% } else if (campaign.sent_at) { %>
+                                Finished <%= new Date(campaign.sent_at).toLocaleString('en-GB') %>.
+                            <% } else { %>
+                                Created <%= new Date(campaign.created_at).toLocaleString('en-GB') %>.
+                            <% } %>
+                            <% if (campaign.status === 'sent' || campaign.status === 'partial') { %>
+                                Delivered: <%= campaign.sent_count %> of <%= campaign.recipient_count %>. Failed: <%= campaign.failure_count %>.
+                            <% } %>
+                        </p>
+                        <% if (campaign.last_error) { %>
+                            <p class="marketing-campaign-error"><%= campaign.last_error %></p>
+                        <% } %>
+                        <% if (campaign.status === 'draft' || campaign.status === 'scheduled') { %>
+                            <div class="marketing-campaign-actions">
+                                <button class="btn btn-primary" type="button" data-send-campaign="<%= campaign.id %>" data-campaign-name="<%= campaign.name %>">Send now</button>
+                                <% if (campaign.status === 'scheduled') { %>
+                                    <button class="btn btn-warning" type="button" data-cancel-campaign="<%= campaign.id %>">Cancel schedule</button>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    </article>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="marketing-assistant-note">No campaigns saved yet. Generate or write a draft in the Marketing Copilot.</p>
+        <% } %>
+        <p class="marketing-assistant-status" data-campaign-history-status role="status" aria-live="polite"></p>
+    </section>
+</main>
+<script src="/js/marketing-campaigns.js"></script>
+
+<%- include('../partials/footer') %>

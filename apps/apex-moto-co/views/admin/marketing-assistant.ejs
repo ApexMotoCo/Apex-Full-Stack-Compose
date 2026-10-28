@@ -6,7 +6,7 @@
         <div>
             <p class="marketing-assistant-eyebrow">APEX MOTO & CO · ADMIN TOOLS</p>
             <h1>Marketing copilot</h1>
-            <p>Turn a clear brief into campaign ideas and ready-to-edit marketing copy.</p>
+            <p>Turn a clear brief into campaign ideas and ready-to-edit marketing copy. Social posts remain drafts until their accounts are connected.</p>
         </div>
         <a href="/admin" class="btn btn-warning">← Admin dashboard</a>
     </div>
@@ -52,11 +52,48 @@
                     <h2 id="marketing-output-title">Draft workspace</h2>
                 </div>
                 <button type="button" class="btn btn-warning" data-marketing-copy disabled>Copy draft</button>
+                <button type="button" class="btn btn-primary" data-marketing-use-email disabled>Use in email</button>
             </div>
             <pre data-marketing-draft aria-live="polite">Your marketing draft will appear here. Start with a campaign idea, a service to promote or a social post brief.</pre>
         </section>
     </div>
+
+    <section class="admin-panel marketing-campaign-composer" aria-labelledby="marketing-campaign-title">
+        <div class="marketing-assistant-output-heading">
+            <div>
+                <p class="marketing-assistant-eyebrow">OPTED-IN SUBSCRIBERS ONLY</p>
+                <h2 id="marketing-campaign-title">Email campaign</h2>
+            </div>
+            <a class="btn btn-warning" href="/admin/marketing-campaigns">Campaign history</a>
+        </div>
+        <p class="marketing-assistant-note">
+            Current audience: <strong><%= recipientCount %></strong> opted-in account holders.
+            New registrations are not subscribed unless they select the optional consent checkbox.
+            Every email includes an unsubscribe link.
+        </p>
+        <form id="marketing-campaign-form" data-marketing-campaign-form data-csrf-token="<%= csrfToken %>">
+            <label for="campaign-name">Internal campaign name</label>
+            <input id="campaign-name" name="name" maxlength="120" required placeholder="e.g. Winter detailing launch">
+
+            <label for="campaign-subject">Email subject</label>
+            <input id="campaign-subject" name="subject" maxlength="200" required placeholder="A clear subject line">
+
+            <label for="campaign-body">Email content</label>
+            <textarea id="campaign-body" name="body" maxlength="20000" rows="10" required placeholder="Paste or adapt your reviewed marketing draft here."></textarea>
+
+            <label for="campaign-schedule">Schedule send (optional)</label>
+            <input id="campaign-schedule" name="scheduledAt" type="datetime-local">
+            <p class="marketing-assistant-note">Saving a draft does not send it. Scheduling approves the message for automatic delivery at the selected time. Send-now campaigns require a separate confirmation.</p>
+
+            <div class="marketing-campaign-actions">
+                <button class="btn btn-warning" name="action" value="draft" type="submit">Save draft</button>
+                <button class="btn btn-primary" name="action" value="schedule" type="submit">Schedule campaign</button>
+            </div>
+            <p class="marketing-assistant-status" data-marketing-campaign-status role="status" aria-live="polite"></p>
+        </form>
+    </section>
 </main>
 <script src="/js/marketing-assistant.js"></script>
+<script src="/js/marketing-campaigns.js"></script>
 
 <%- include('../partials/footer') %>
