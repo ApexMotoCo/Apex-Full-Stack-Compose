@@ -1532,8 +1532,8 @@ app.post('/detailing/book', parseBookingPhotos, (req, res) => {
   const reject = (status, error) => cleanupBookingPhotos(uploadedPhotos, () => {
     res.status(status).json({ error });
   });
-  if (!uploadedPhotos.length) {
-    return reject(400, 'Upload at least one photo of your vehicle to request a detailing booking.');
+  if (uploadedPhotos.length < 4) {
+    return reject(400, 'Upload at least four photos of your vehicle to request a detailing booking.');
   }
 
   const b = req.body || {};

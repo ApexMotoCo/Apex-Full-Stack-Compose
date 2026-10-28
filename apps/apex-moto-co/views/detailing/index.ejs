@@ -417,9 +417,9 @@
                     </div>
 
                     <div style="margin-bottom: 20px;">
-                        <label for="booking-photos" style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Vehicle Photos * (at least one required)</label>
+                        <label for="booking-photos" style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Vehicle Photos * (at least four required)</label>
                         <input type="file" id="booking-photos" name="photos" accept="image/jpeg,image/png,image/webp,image/gif" multiple required style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 8px 0 0;">Upload 1 to 5 clear photos of your vehicle. JPEG, PNG, WebP or GIF; maximum 8 MB each.</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 8px 0 0;">Upload 4 to 5 clear photos of your vehicle. JPEG, PNG, WebP or GIF; maximum 8 MB each.</p>
                     </div>
                 </div>
 
@@ -497,6 +497,13 @@ document.querySelectorAll('input[name="treatment"]').forEach((input) => {
 // Direct booking form submission
 document.getElementById('bookingForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+
+    const photoInput = document.getElementById('booking-photos');
+    if (photoInput.files.length < 4) {
+        alert('Please upload at least four photos of your vehicle.');
+        photoInput.focus();
+        return;
+    }
     
     const formData = new FormData(this);
     
