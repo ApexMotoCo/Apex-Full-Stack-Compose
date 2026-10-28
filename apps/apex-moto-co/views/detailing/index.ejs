@@ -415,6 +415,12 @@
                         <label style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Additional Notes</label>
                         <textarea name="notes" rows="4" style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;"></textarea>
                     </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label for="booking-photos" style="color: #fff; font-weight: bold; display: block; margin-bottom: 8px;">Vehicle Photos * (at least one required)</label>
+                        <input type="file" id="booking-photos" name="photos" accept="image/jpeg,image/png,image/webp,image/gif" multiple required style="width: 100%; padding: 10px; background-color: #111; color: #fff; border: 1px solid #333; border-radius: 4px;">
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 8px 0 0;">Upload 1 to 5 clear photos of your vehicle. JPEG, PNG, WebP or GIF; maximum 8 MB each.</p>
+                    </div>
                 </div>
 
                 <div style="text-align: center;">
@@ -493,15 +499,11 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     e.preventDefault();
     
     const formData = new FormData(this);
-    const data = Object.fromEntries(formData);
-    // keep every ticked additional service (fromEntries only keeps the last one)
-    data.additional_services = formData.getAll('additional_services').join(', ');
     
     try {
         const response = await fetch('/detailing/book', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: formData
         });
         
         if (response.ok) {

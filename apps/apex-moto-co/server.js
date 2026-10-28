@@ -56,6 +56,8 @@ const db = new sqlite3.Database(
 db.configure('busyTimeout', 5000);
 const galleryDirectory = path.join(__dirname, 'data', 'gallery');
 fs.mkdirSync(galleryDirectory, { recursive: true });
+const detailingPhotoDirectory = path.join(__dirname, 'data', 'detailing-jobs');
+fs.mkdirSync(detailingPhotoDirectory, { recursive: true });
 const galleryUpload = multer({
   storage: multer.diskStorage({
     destination: galleryDirectory,
@@ -71,6 +73,28 @@ const galleryUpload = multer({
     callback(null, true);
   },
   limits: { fileSize: 10 * 1024 * 1024 }
+});
+const bookingPhotoUpload = multer({
+  storage: multer.diskStorage({
+    destination: detailingPhotoDirectory,
+    filename: (req, file, callback) => {
+      const extensions = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'image/webp': '.webp',
+        'image/gif': '.gif'
+      };
+      const extension = extensions[file.mimetype];
+      callback(null, `${Date.now()}-${crypto.randomBytes(8).toString('hex')}${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.mimetype)) {
+      return callback(new Error('Upload JPEG, PNG, WebP or GIF photos.'));
+    }
+    callback(null, true);
+  },
+  limits: { files: 5, fileSize: 8 * 1024 * 1024 }
 });
 
 // ============================================================
@@ -834,7 +858,8 @@ registerDetailingMobileApi(
   {
     requireLogin,
     requireAdmin,
-    workshopAuth
+    workshopAuth,
+    photoDirectory: detailingPhotoDirectory
   }
 );
 
@@ -1451,7 +1476,66 @@ app.get('/detailing/services', (req, res) => {
   res.redirect(301, '/services');
 });
 
-app.post('/detailing/book', (req, res) => {
+app.get('/uploads/detailing-jobs/:filename', (req, res) => {
+  const filename = path.basename(req.params.filename);
+  const filePath = path.join(detailingPhotoDirectory, filename);
+  fs.stat(filePath, (err, file) => {
+    if (err) {
+      if (err.code !== 'ENOENT') {
+        console.error('Unable to access detailing photo:', err.message);
+      }
+      return res.status(err.code === 'ENOENT' ? 404 : 500).send('Photo not found');
+    }
+    if (!file.isFile()) {
+      return res.status(404).send('Photo not found');
+    }
+    res.sendFile(filePath);
+  });
+});
+
+function cleanupBookingPhotos(files, callback) {
+  const uploadedFiles = files || [];
+  if (!uploadedFiles.length) {
+    callback();
+    return;
+  }
+
+  let remaining = uploadedFiles.length;
+  uploadedFiles.forEach((file) => {
+    fs.unlink(file.path, (err) => {
+      if (err && err.code !== 'ENOENT') {
+        console.error('Unable to remove rejected booking photo:', err.message);
+      }
+      remaining -= 1;
+      if (remaining === 0) callback();
+    });
+  });
+}
+
+function parseBookingPhotos(req, res, next) {
+  bookingPhotoUpload.array('photos', 5)(req, res, (err) => {
+    if (!err) {
+      return next();
+    }
+
+    const status = err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE'
+      ? 413
+      : 400;
+    cleanupBookingPhotos(req.files, () => {
+      res.status(status).json({ error: err.message || 'Unable to upload booking photos.' });
+    });
+  });
+}
+
+app.post('/detailing/book', parseBookingPhotos, (req, res) => {
+  const uploadedPhotos = req.files || [];
+  const reject = (status, error) => cleanupBookingPhotos(uploadedPhotos, () => {
+    res.status(status).json({ error });
+  });
+  if (!uploadedPhotos.length) {
+    return reject(400, 'Upload at least one photo of your vehicle to request a detailing booking.');
+  }
+
   const b = req.body || {};
   const clean = (v, max = 500) => String(v == null ? '' : v).trim().slice(0, max);
 
@@ -1467,19 +1551,19 @@ app.post('/detailing/book', (req, res) => {
   const bookingTime = clean(b.booking_time, 20);
 
   if (!name || !phone) {
-    return res.status(400).json({ error: 'Name and phone number are required' });
+    return reject(400, 'Name and phone number are required');
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'Please enter a valid email address' });
+    return reject(400, 'Please enter a valid email address');
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(bookingDate)) {
-    return res.status(400).json({ error: 'Please choose a preferred date' });
+    return reject(400, 'Please choose a preferred date');
   }
   if (bookingTime && !/^\d{2}:\d{2}$/.test(bookingTime)) {
-    return res.status(400).json({ error: 'Invalid time' });
+    return reject(400, 'Invalid time');
   }
   if (!serviceType) {
-    return res.status(400).json({ error: 'Please select a treatment' });
+    return reject(400, 'Please select a treatment');
   }
 
   // Details that have no column of their own are kept in the notes field so the
@@ -1514,9 +1598,42 @@ app.post('/detailing/book', (req, res) => {
     function (err) {
       if (err) {
         console.error('[BOOKING] Insert failed:', err.message);
-        return res.status(500).json({ error: 'Booking failed' });
+        return reject(500, 'Booking failed');
       }
-      res.json({ success: true, id: this.lastID, message: 'Booking confirmed!' });
+
+      const bookingId = this.lastID;
+      const savePhoto = (index) => {
+        if (index >= uploadedPhotos.length) {
+          return res.json({ success: true, id: bookingId, message: 'Booking confirmed!' });
+        }
+
+        const photo = uploadedPhotos[index];
+        db.run(
+          `INSERT INTO detailing_job_photos (booking_id, filename, original_name)
+           VALUES (?, ?, ?)`,
+          [bookingId, path.basename(photo.filename), clean(path.basename(photo.originalname), 255)],
+          (photoErr) => {
+            if (photoErr) {
+              console.error('[BOOKING] Photo record insert failed:', photoErr.message);
+              db.run('DELETE FROM detailing_job_photos WHERE booking_id = ?', [bookingId], (deletePhotosErr) => {
+                if (deletePhotosErr) {
+                  console.error('[BOOKING] Unable to remove partial photo records:', deletePhotosErr.message);
+                }
+                db.run('DELETE FROM bookings WHERE id = ?', [bookingId], (deleteBookingErr) => {
+                  if (deleteBookingErr) {
+                    console.error('[BOOKING] Unable to remove booking after photo failure:', deleteBookingErr.message);
+                  }
+                  reject(500, 'Unable to save booking photos. Please try again.');
+                });
+              });
+              return;
+            }
+            savePhoto(index + 1);
+          }
+        );
+      };
+
+      savePhoto(0);
     }
   );
 });
@@ -1541,11 +1658,35 @@ app.get(
           });
         }
 
-        res.render(
-          'admin/detailing-bookings',
-          {
-            bookings:
-              bookings || []
+        const bookingRows = bookings || [];
+        if (!bookingRows.length) {
+          return res.render('admin/detailing-bookings', { bookings: [], photosByBooking: {} });
+        }
+
+        db.all(
+          `SELECT p.id, p.booking_id, p.filename, p.original_name
+           FROM detailing_job_photos p
+           INNER JOIN bookings b ON b.id = p.booking_id
+           ORDER BY b.booking_date DESC, p.id ASC`,
+          (photoErr, photos) => {
+            if (photoErr) {
+              console.error('Unable to load detailing booking photos:', photoErr.message);
+              return res.status(500).render('error', {
+                message: 'Unable to load detailing booking photos.'
+              });
+            }
+
+            const photosByBooking = {};
+            (photos || []).forEach((photo) => {
+              if (!photosByBooking[photo.booking_id]) {
+                photosByBooking[photo.booking_id] = [];
+              }
+              photosByBooking[photo.booking_id].push(photo);
+            });
+            res.render('admin/detailing-bookings', {
+              bookings: bookingRows,
+              photosByBooking
+            });
           }
         );
 

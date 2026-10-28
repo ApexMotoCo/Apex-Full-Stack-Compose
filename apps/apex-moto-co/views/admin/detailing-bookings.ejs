@@ -20,6 +20,7 @@
                             <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Status</th>
                             <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Appointment</th>
                             <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Notes</th>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Photos</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +36,12 @@
                                 </td>
                                 <td style="padding: 15px; color: var(--text-muted);"><%= booking.booking_date || 'N/A' %><% if (booking.booking_time) { %><br><%= booking.booking_time %><% } %></td>
                                 <td style="padding: 15px; color: var(--text-muted); white-space: pre-line;"><%= booking.notes || '—' %></td>
+                                <td style="padding: 15px; color: var(--text-muted);">
+                                    <% const bookingPhotos = photosByBooking[booking.id] || []; %>
+                                    <% bookingPhotos.forEach((photo, index) => { %>
+                                        <a href="/uploads/detailing-jobs/<%= encodeURIComponent(photo.filename) %>" target="_blank" rel="noopener noreferrer" style="color: #ff986f;"><%= photo.original_name || `Photo ${index + 1}` %></a><% if (index < bookingPhotos.length - 1) { %><br><% } %>
+                                    <% }); %>
+                                </td>
                             </tr>
                         <% }); %>
                     </tbody>
