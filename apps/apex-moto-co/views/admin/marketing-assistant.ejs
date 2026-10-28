@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+
+<link rel="stylesheet" href="/css/marketing-assistant.css">
+<main class="container marketing-assistant" data-marketing-assistant data-csrf-token="<%= csrfToken %>">
+    <div class="marketing-assistant-heading">
+        <div>
+            <p class="marketing-assistant-eyebrow">APEX MOTO & CO · ADMIN TOOLS</p>
+            <h1>Marketing copilot</h1>
+            <p>Turn a clear brief into campaign ideas and ready-to-edit marketing copy.</p>
+        </div>
+        <a href="/admin" class="btn btn-warning">← Admin dashboard</a>
+    </div>
+
+    <div class="marketing-assistant-grid">
+        <form class="admin-panel marketing-assistant-form" data-marketing-form>
+            <h2>Build your brief</h2>
+            <label for="marketing-type">What are you creating?</label>
+            <select id="marketing-type" name="campaignType" required>
+                <option value="campaign">Campaign strategy</option>
+                <option value="social">Social media posts</option>
+                <option value="email">Marketing email</option>
+                <option value="promotion">Promotion concept</option>
+                <option value="product-copy">Product or service copy</option>
+                <option value="content-calendar">Four-week content calendar</option>
+            </select>
+
+            <label for="marketing-audience">Who is it for?</label>
+            <input id="marketing-audience" name="audience" maxlength="200" placeholder="e.g. UK motorcycle commuters">
+
+            <label for="marketing-objective">What should it achieve?</label>
+            <input id="marketing-objective" name="objective" maxlength="300" placeholder="e.g. Generate detailing enquiries">
+
+            <label for="marketing-tone">Writing tone</label>
+            <select id="marketing-tone" name="tone" required>
+                <option>Energetic</option>
+                <option>Premium</option>
+                <option>Friendly</option>
+                <option>Informative</option>
+            </select>
+
+            <label for="marketing-details">Brief, channel or confirmed facts</label>
+            <textarea id="marketing-details" name="details" maxlength="2000" rows="6" placeholder="Add the channel, product or service details, dates, offer terms, and anything else the copy must include. Mark facts you haven't confirmed as unknown."></textarea>
+            <p class="marketing-assistant-note">Drafts are suggestions. Check prices, availability, dates and claims before publishing.</p>
+            <button type="submit" class="btn btn-primary" data-marketing-submit>Generate marketing draft</button>
+            <p class="marketing-assistant-status" data-marketing-status role="status" aria-live="polite"></p>
+        </form>
+
+        <section class="admin-panel marketing-assistant-output" aria-labelledby="marketing-output-title">
+            <div class="marketing-assistant-output-heading">
+                <div>
+                    <p class="marketing-assistant-eyebrow">YOUR NEXT IDEA</p>
+                    <h2 id="marketing-output-title">Draft workspace</h2>
+                </div>
+                <button type="button" class="btn btn-warning" data-marketing-copy disabled>Copy draft</button>
+            </div>
+            <pre data-marketing-draft aria-live="polite">Your marketing draft will appear here. Start with a campaign idea, a service to promote or a social post brief.</pre>
+        </section>
+    </div>
+</main>
+<script src="/js/marketing-assistant.js"></script>
+
+<%- include('../partials/footer') %>

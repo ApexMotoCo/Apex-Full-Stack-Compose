@@ -1,0 +1,137 @@
+.marketing-assistant {
+    padding-top: 36px;
+    padding-bottom: 60px;
+}
+
+.marketing-assistant-heading,
+.marketing-assistant-output-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.marketing-assistant-heading {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.marketing-assistant-heading h1,
+.marketing-assistant-output h2 {
+    margin: 0;
+    color: var(--text-main);
+}
+
+.marketing-assistant-heading > div > p:last-child {
+    margin: 8px 0 0;
+    color: var(--text-muted);
+}
+
+.marketing-assistant-eyebrow {
+    margin: 0 0 8px;
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.marketing-assistant-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+    gap: 24px;
+}
+
+.marketing-assistant-form h2 {
+    margin: 0 0 20px;
+}
+
+.marketing-assistant-form label {
+    display: block;
+    margin: 14px 0 6px;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.marketing-assistant-form input,
+.marketing-assistant-form select,
+.marketing-assistant-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 11px 12px;
+    background: #0a0a0a;
+    color: var(--text-main);
+    font: inherit;
+}
+
+.marketing-assistant-form input:focus,
+.marketing-assistant-form select:focus,
+.marketing-assistant-form textarea:focus {
+    border-color: var(--primary);
+    outline: 2px solid rgba(255, 85, 0, 0.2);
+}
+
+.marketing-assistant-form textarea {
+    resize: vertical;
+}
+
+.marketing-assistant-note,
+.marketing-assistant-status {
+    color: var(--text-muted);
+    font-size: 0.86rem;
+}
+
+.marketing-assistant-form > .btn {
+    width: 100%;
+    margin-top: 6px;
+}
+
+.marketing-assistant-form button:disabled,
+.marketing-assistant-output button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.marketing-assistant-status {
+    min-height: 1.4em;
+    margin-bottom: 0;
+}
+
+.marketing-assistant-output {
+    min-height: 440px;
+}
+
+.marketing-assistant-output-heading {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.marketing-assistant-output pre {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    color: var(--text-main);
+    font: inherit;
+    line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+    .marketing-assistant-heading,
+    .marketing-assistant-output-heading {
+        align-items: flex-start;
+    }
+
+    .marketing-assistant-heading {
+        flex-direction: column;
+    }
+
+    .marketing-assistant-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .marketing-assistant-output {
+        min-height: 280px;
+    }
+}

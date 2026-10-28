@@ -42,9 +42,20 @@ const chatbotLimiter = rateLimit({
     legacyHeaders: false
 });
 
+const marketingAssistantLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 15,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => res.status(429).json({
+        error: 'You have reached the marketing assistant limit. Please try again shortly.'
+    })
+});
+
 module.exports = {
     contactFormLimiter,
     loginLimiter,
     passwordResetLimiter,
-    chatbotLimiter
+    chatbotLimiter,
+    marketingAssistantLimiter
 };
