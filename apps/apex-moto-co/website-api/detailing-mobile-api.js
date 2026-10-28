@@ -16,7 +16,7 @@ function registerDetailingMobileApi(app, db, options = {}) {
   const secret = options.secret || process.env.DETAILING_APP_SECRET;
   const allowedRoles = options.allowedRoles || ['admin'];
 
-  const photoDir = path.join(
+  const photoDir = options.photoDirectory || path.join(
     __dirname,
     '..',
     'public',
