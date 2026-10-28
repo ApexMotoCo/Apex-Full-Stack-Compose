@@ -2677,6 +2677,42 @@ app.get(
 
   }
 );
+app.get('/admin/detailing/bookings/:id', requireAdmin, (req, res) => {
+  const bookingId = Number(req.params.id);
+  if (!Number.isSafeInteger(bookingId) || bookingId < 1) {
+    return res.status(404).render('error', { message: 'Detailing booking not found.' });
+  }
+
+  db.get('SELECT * FROM bookings WHERE id = ?', [bookingId], (bookingErr, booking) => {
+    if (bookingErr) {
+      console.error('Unable to load detailing booking:', bookingErr.message);
+      return res.status(500).render('error', { message: 'Unable to load detailing booking.' });
+    }
+    if (!booking) {
+      return res.status(404).render('error', { message: 'Detailing booking not found.' });
+    }
+
+    db.all(
+      `SELECT id, filename, original_name
+       FROM detailing_job_photos
+       WHERE booking_id = ?
+       ORDER BY id ASC`,
+      [bookingId],
+      (photoErr, photos) => {
+        if (photoErr) {
+          console.error('Unable to load detailing booking photos:', photoErr.message);
+          return res.status(500).render('error', { message: 'Unable to load detailing booking photos.' });
+        }
+
+        res.render('admin/detailing-booking', {
+          booking,
+          photos: photos || []
+        });
+      }
+    );
+  });
+});
+
 // ============================================================
 // AUDIT LOGS
 // ============================================================

@@ -21,6 +21,7 @@
                             <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Appointment</th>
                             <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Notes</th>
                             <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Photos</th>
+                            <th style="padding: 15px; text-align: left; color: #ff5500; font-weight: bold; border-bottom: 2px solid #ff5500;">Booking</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +42,9 @@
                                     <% bookingPhotos.forEach((photo, index) => { %>
                                         <a href="/uploads/detailing-jobs/<%= encodeURIComponent(photo.filename) %>" target="_blank" rel="noopener noreferrer" style="color: #ff986f;"><%= photo.original_name || `Photo ${index + 1}` %></a><% if (index < bookingPhotos.length - 1) { %><br><% } %>
                                     <% }); %>
+                                </td>
+                                <td style="padding: 15px;">
+                                    <a href="/admin/detailing/bookings/<%= encodeURIComponent(booking.id) %>" style="color: #ff986f; font-weight: bold;">Open booking</a>
                                 </td>
                             </tr>
                         <% }); %>
