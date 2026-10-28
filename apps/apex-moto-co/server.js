@@ -152,6 +152,7 @@ app.use((req, res, next) => {
   res.locals.metaDescription = pageMetadata[1];
   res.locals.canonicalUrl = `https://apexingoodcompany.co.uk${req.path === '/' ? '/' : req.path}`;
   res.locals.isPublicPage = !req.path.startsWith('/admin');
+  res.locals.currentPath = req.path;
   res.locals.newsletterStatus = ['success', 'error'].includes(req.query.newsletter)
     ? req.query.newsletter
     : '';
@@ -1169,57 +1170,44 @@ app.get(
           (err, announcements) => {
 
             db.get(
-              `SELECT COUNT(*) as items
-               FROM store_items`,
-              (err, items) => {
+              `SELECT COUNT(*) as users
+               FROM users`,
+              (err, users) => {
 
                 db.get(
-                  `SELECT COUNT(*) as users
-                   FROM users`,
-                  (err, users) => {
+                  `SELECT SUM(total_price) as orders
+                   FROM orders
+                   WHERE status = 'completed'`,
+                  (err, orders) => {
 
-                    db.get(
-                      `SELECT SUM(total_price) as orders
-                       FROM orders
-                       WHERE status = 'completed'`,
-                      (err, orders) => {
+                    const stats = {
 
-                        const stats = {
+                      bookings:
+                        bookings
+                          ? bookings.bookings
+                          : 0,
 
-                          bookings:
-                            bookings
-                              ? bookings.bookings
-                              : 0,
+                      announcements:
+                        announcements
+                          ? announcements.announcements
+                          : 0,
 
-                          announcements:
-                            announcements
-                              ? announcements.announcements
-                              : 0,
+                      users:
+                        users
+                          ? users.users
+                          : 0,
 
-                          items:
-                            items
-                              ? items.items
-                              : 0,
+                      orders:
+                        orders &&
+                        orders.orders
+                          ? orders.orders
+                          : 0
 
-                          users:
-                            users
-                              ? users.users
-                              : 0,
+                    };
 
-                          orders:
-                            orders &&
-                            orders.orders
-                              ? orders.orders
-                              : 0
-
-                        };
-
-                        res.render(
-                          'admin/dashboard',
-                          { stats }
-                        );
-
-                      }
+                    res.render(
+                      'admin/dashboard',
+                      { stats }
                     );
 
                   }
@@ -1471,7 +1459,7 @@ app.post('/detailing/book', (req, res) => {
   const phone = clean(b.phone, 40);
   const email = clean(b.email, 160);
   const vehicleType = clean(b.vehicle_type, 40) || 'Motorcycle';
-  // The package string (e.g. "Tier 01: The Express Refresh - £35") is what the
+  // The package string (e.g. "Tier 01: The Express Refresh - From £35") is what the
   // Workshop app reads its price from, so keep it exactly as the form sends it.
   const serviceType = clean(b.service_type || b.treatment, 200);
 

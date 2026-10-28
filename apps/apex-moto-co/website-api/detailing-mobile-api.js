@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Package names on the booking form include the price, e.g.
-// "Tier 01: The Express Refresh - £35". Read it from there so the Workshop
+// "Tier 01: The Express Refresh - From £35". Read it from there so the Workshop
 // app can show a price. Packages with no price (e.g. bespoke quotes) return "Quote".
 function priceFromService(serviceType) {
   const m = String(serviceType || '').match(/£\s*(\d+(?:\.\d{1,2})?)/);
