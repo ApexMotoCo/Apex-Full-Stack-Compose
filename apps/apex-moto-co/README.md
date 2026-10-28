@@ -59,6 +59,7 @@ A **production-ready motorcycle detailing and servicing platform** built with No
 - Audit logs for all admin actions
 - Site settings configuration
 - User management
+- Admin-only AI marketing copilot for campaign planning, social posts, email, promotions, and service/product copy
 
 ### 📱 Responsive Design
 - Mobile-friendly interface
@@ -134,6 +135,8 @@ EMAIL_PORT=587
 EMAIL_USER=support@apexingoodcompany.co.uk
 EMAIL_PASSWORD=your-password-here
 SESSION_SECRET=generate-a-long-random-value
+OPENAI_API_KEY=your-openai-api-key
+OPENAI_MODEL=gpt-4o-mini
 
 # Admin Credentials
 ADMIN_EMAIL_1=adamgore462@gmail.com
@@ -141,6 +144,8 @@ ADMIN_PASSWORD_1=use-a-strong-password
 ADMIN_EMAIL_2=jordanroberts132798@icloud.com
 ADMIN_PASSWORD_2=use-a-strong-password
 ```
+
+The marketing copilot uses the OpenAI API from the server. Keep `OPENAI_API_KEY` private; for the root Docker Compose stack, set it in the root `.env` file so it is passed to the Apex Moto & Co web container. Drafts are suggestions and should be checked for accuracy before publishing.
 
 ---
 

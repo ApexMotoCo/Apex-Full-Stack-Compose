@@ -15,9 +15,14 @@ const { logAction } = require('./services/audit');
 const { csrfProtection, validateCSRF } = require('./middleware/csrf');
 const { requestLogger } = require('./middleware/request-logger');
 const {
+  generateMarketingDraft,
+  validateMarketingBrief
+} = require('./services/marketing-assistant');
+const {
   contactFormLimiter,
   loginLimiter,
-  passwordResetLimiter
+  passwordResetLimiter,
+  marketingAssistantLimiter
 } = require('./middleware/rate-limiters');
 
 const {
@@ -437,6 +442,41 @@ function requireLogin(req, res, next) {
 
   next();
 }
+
+// ============================================================
+// ADMIN MARKETING ASSISTANT
+// ============================================================
+
+app.get('/admin/marketing-assistant', requireAdmin, (req, res) => {
+  res.render('admin/marketing-assistant');
+});
+
+app.post(
+  '/admin/marketing-assistant/generate',
+  requireAdmin,
+  marketingAssistantLimiter,
+  validateCSRF,
+  async (req, res) => {
+    const validationError = validateMarketingBrief(req.body || {});
+    if (validationError) {
+      return res.status(400).json({ error: validationError });
+    }
+
+    try {
+      const draft = await generateMarketingDraft(req.body);
+      return res.json({ draft });
+    } catch (error) {
+      if (error.statusCode) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+
+      console.error('Marketing assistant request failed:', error.message);
+      return res.status(502).json({
+        error: 'The marketing assistant could not reach the AI provider. Please try again.'
+      });
+    }
+  }
+);
 
 // ============================================================
 // WORKSHOP / APEX DETAILING MOBILE API
@@ -2624,5 +2664,3 @@ app.listen(
 
   }
 );
-
-

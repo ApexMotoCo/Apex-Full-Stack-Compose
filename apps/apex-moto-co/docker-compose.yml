@@ -18,6 +18,8 @@ services:
       WORKSHOP_AUTH_SECRET: ${WORKSHOP_AUTH_SECRET}
       ADMIN_EMAIL_1: ${ADMIN_EMAIL_1}
       ADMIN_PASSWORD_1: ${ADMIN_PASSWORD_1}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
     volumes:
       - ./data:/app/data
     restart: unless-stopped
