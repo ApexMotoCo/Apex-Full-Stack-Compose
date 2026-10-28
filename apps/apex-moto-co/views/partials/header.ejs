@@ -59,9 +59,6 @@
                 <a href="/services">Services</a>
                 <a href="/events">Events</a>
                 <a href="/contact">Contact Us</a>
-                <% if (isPublicPage !== false) { %>
-                    <a href="/#newsletter" class="nav-btn-alt">Get Updates</a>
-                <% } %>
                 <% if (user) { %>
                     <% if (user.role === 'admin') { %>
                         <a href="/admin" class="nav-btn" style="background: var(--warning); color: #000;">⚙️ Admin</a>
