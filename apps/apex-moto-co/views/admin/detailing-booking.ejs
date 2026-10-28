@@ -9,22 +9,58 @@
         <a href="/admin/detailing/bookings" class="btn btn-warning">Back to bookings</a>
     </div>
 
+    <% if (updated) { %>
+        <p role="status" style="background: #103b2e; border: 1px solid #10b981; border-radius: 6px; color: #d1fae5; padding: 12px 16px;">Booking changes saved.</p>
+    <% } %>
+
     <section style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-bottom: 24px;">
-        <h2 style="margin: 0 0 18px; color: var(--primary);">Booking details</h2>
-        <dl class="booking-details">
-            <div><dt>Status</dt><dd><%= (booking.status || 'pending').replace(/_/g, ' ') %></dd></div>
-            <div><dt>Service</dt><dd><%= booking.service_type || 'Service not specified' %></dd></div>
-            <div><dt>Vehicle type</dt><dd><%= booking.vehicle_type || 'Not specified' %></dd></div>
-            <div><dt>Appointment</dt><dd><%= booking.booking_date || 'Date not specified' %><% if (booking.booking_time) { %> at <%= booking.booking_time %><% } %></dd></div>
-            <div><dt>Customer</dt><dd><%= booking.name || 'Not specified' %></dd></div>
-            <div><dt>Email</dt><dd><% if (booking.email) { %><a href="mailto:<%= booking.email %>"><%= booking.email %></a><% } else { %>Not provided<% } %></dd></div>
-            <div><dt>Phone</dt><dd><% if (booking.phone) { %><a href="tel:<%= booking.phone %>"><%= booking.phone %></a><% } else { %>Not provided<% } %></dd></div>
-            <div><dt>Submitted</dt><dd><%= booking.created_at || 'Not available' %></dd></div>
-        </dl>
-        <div style="margin-top: 20px;">
-            <h3 style="margin: 0 0 8px;">Customer notes</h3>
-            <p style="white-space: pre-wrap; margin: 0; color: var(--text-muted);"><%= booking.notes || 'No additional notes.' %></p>
-        </div>
+        <h2 style="margin: 0 0 18px; color: var(--primary);">Edit booking</h2>
+        <form method="post" action="/admin/detailing/bookings/<%= encodeURIComponent(booking.id) %>">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="booking-edit-grid">
+                <label>Customer name *
+                    <input name="name" type="text" maxlength="120" value="<%= booking.name || '' %>" required>
+                </label>
+                <label>Email *
+                    <input name="email" type="email" maxlength="160" value="<%= booking.email || '' %>" required>
+                </label>
+                <label>Phone *
+                    <input name="phone" type="tel" maxlength="40" value="<%= booking.phone || '' %>" required>
+                </label>
+                <label>Vehicle type *
+                    <select name="vehicleType" required>
+                        <% ['Motorcycle', 'Car', 'Other'].forEach((vehicleType) => { %>
+                            <option value="<%= vehicleType %>" <%= booking.vehicle_type === vehicleType ? 'selected' : '' %>><%= vehicleType %></option>
+                        <% }); %>
+                    </select>
+                </label>
+                <label>Service *
+                    <input name="serviceType" type="text" maxlength="200" value="<%= booking.service_type || '' %>" required>
+                </label>
+                <label>Status *
+                    <select name="status" required>
+                        <% const statuses = ['pending', 'assigned', 'vehicle_arrived', 'inspection', 'in_progress', 'quality_check', 'ready_for_collection', 'completed', 'cancelled']; %>
+                        <% if (booking.status && !statuses.includes(booking.status)) { %>
+                            <option value="<%= booking.status %>" selected><%= booking.status.replace(/_/g, ' ') %></option>
+                        <% } %>
+                        <% statuses.forEach((status) => { %>
+                            <option value="<%= status %>" <%= (booking.status || 'pending') === status ? 'selected' : '' %>><%= status.replace(/_/g, ' ') %></option>
+                        <% }); %>
+                    </select>
+                </label>
+                <label>Appointment date *
+                    <input name="bookingDate" type="date" value="<%= booking.booking_date || '' %>" required>
+                </label>
+                <label>Appointment time
+                    <input name="bookingTime" type="time" value="<%= booking.booking_time || '' %>">
+                </label>
+            </div>
+            <label style="display: block; margin-top: 18px;">Notes
+                <textarea name="notes" rows="5" maxlength="2000"><%= booking.notes || '' %></textarea>
+            </label>
+            <p style="color: var(--text-muted); margin: 14px 0;">Submitted: <%= booking.created_at || 'Not available' %></p>
+            <button type="submit" class="btn btn-warning">Save booking changes</button>
+        </form>
     </section>
 
     <section style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px;">
@@ -45,10 +81,10 @@
 </main>
 
 <style>
-.booking-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin: 0; }
-.booking-details dt { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 4px; }
-.booking-details dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
-.booking-details a, .booking-photos a { color: #ff986f; }
+.booking-edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+.booking-edit-grid label, form > label { display: grid; gap: 7px; font-weight: 600; }
+.booking-edit-grid input, .booking-edit-grid select, form > label textarea { box-sizing: border-box; width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 6px; background: #111; color: #fff; font: inherit; }
+.booking-photos a { color: #ff986f; }
 .booking-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
 .booking-photos a { display: grid; gap: 8px; text-decoration: none; }
 .booking-photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; background: #111; }

@@ -2706,8 +2706,104 @@ app.get('/admin/detailing/bookings/:id', requireAdmin, (req, res) => {
 
         res.render('admin/detailing-booking', {
           booking,
-          photos: photos || []
+          photos: photos || [],
+          updated: req.query.updated === '1'
         });
+      }
+    );
+  });
+});
+
+app.post('/admin/detailing/bookings/:id', requireAdmin, validateCSRF, (req, res) => {
+  const bookingId = Number(req.params.id);
+  if (!Number.isSafeInteger(bookingId) || bookingId < 1) {
+    return res.status(404).render('error', { message: 'Detailing booking not found.' });
+  }
+
+  const { name, email, phone, vehicleType, serviceType, bookingDate, bookingTime, notes, status } = req.body || {};
+  const clean = (value, maxLength) => (typeof value === 'string' ? value.trim().slice(0, maxLength) : '');
+  const booking = {
+    name: clean(name, 120),
+    email: clean(email, 160),
+    phone: clean(phone, 40),
+    vehicleType: clean(vehicleType, 40),
+    serviceType: clean(serviceType, 200),
+    bookingDate: clean(bookingDate, 10),
+    bookingTime: clean(bookingTime, 5),
+    notes: clean(notes, 2000),
+    status: clean(status, 40)
+  };
+  const allowedStatuses = new Set([
+    'pending',
+    'assigned',
+    'vehicle_arrived',
+    'inspection',
+    'in_progress',
+    'quality_check',
+    'ready_for_collection',
+    'completed',
+    'cancelled'
+  ]);
+  const dateParts = booking.bookingDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const timeParts = booking.bookingTime.match(/^(\d{2}):(\d{2})$/);
+  const validDate = dateParts && (() => {
+    const date = new Date(Date.UTC(Number(dateParts[1]), Number(dateParts[2]) - 1, Number(dateParts[3])));
+    return date.getUTCFullYear() === Number(dateParts[1]) &&
+      date.getUTCMonth() === Number(dateParts[2]) - 1 &&
+      date.getUTCDate() === Number(dateParts[3]);
+  })();
+  const validTime = !booking.bookingTime ||
+    (timeParts && Number(timeParts[1]) < 24 && Number(timeParts[2]) < 60);
+
+  if (!booking.name || !booking.phone || !booking.serviceType ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(booking.email) ||
+      !validDate || !validTime ||
+      !['Motorcycle', 'Car', 'Other'].includes(booking.vehicleType)) {
+    return res.status(400).render('error', {
+      message: 'Check the booking details and make sure all required fields are valid.'
+    });
+  }
+
+  db.get('SELECT status FROM bookings WHERE id = ?', [bookingId], (findErr, existingBooking) => {
+    if (findErr) {
+      console.error('Unable to load detailing booking before update:', findErr.message);
+      return res.status(500).render('error', { message: 'Unable to update detailing booking.' });
+    }
+    if (!existingBooking) {
+      return res.status(404).render('error', { message: 'Detailing booking not found.' });
+    }
+    if (!allowedStatuses.has(booking.status) && booking.status !== existingBooking.status) {
+      return res.status(400).render('error', {
+        message: 'Choose a valid booking status.'
+      });
+    }
+
+    db.run(
+      `UPDATE bookings
+       SET name = ?, email = ?, phone = ?, vehicle_type = ?, service_type = ?,
+           booking_date = ?, booking_time = ?, notes = ?, status = ?
+       WHERE id = ?`,
+      [
+        booking.name,
+        booking.email,
+        booking.phone,
+        booking.vehicleType,
+        booking.serviceType,
+        booking.bookingDate,
+        booking.bookingTime,
+        booking.notes,
+        booking.status,
+        bookingId
+      ],
+      function (updateErr) {
+        if (updateErr) {
+          console.error('Unable to update detailing booking:', updateErr.message);
+          return res.status(500).render('error', { message: 'Unable to update detailing booking.' });
+        }
+        if (!this.changes) {
+          return res.status(404).render('error', { message: 'Detailing booking not found.' });
+        }
+        return res.redirect(`/admin/detailing/bookings/${bookingId}?updated=1`);
       }
     );
   });
