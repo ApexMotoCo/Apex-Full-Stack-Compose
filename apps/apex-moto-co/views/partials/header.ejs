@@ -36,6 +36,9 @@
     <link rel="stylesheet" href="/mobile-responsive.css">
     <link rel="stylesheet" href="/css/mobile-menu-fix.css">
     <link rel="stylesheet" href="/css/chatbot.css?v=3">
+    <% if (isPublicPage === false) { %>
+    <link rel="stylesheet" href="/css/admin.css?v=2">
+    <% } %>
 </head>
 <body class="<%= isPublicPage === false ? 'admin-shell' : 'site-shell' %>">
     <!-- Hologram Background Effects -->
@@ -43,9 +46,14 @@
     <div class="hologram-glow-overlay"></div>
     <header class="site-header">
         <div class="header-container">
-            <a href="/" class="logo" style="display: flex; align-items: center; font-size: unset !important;">
-                <img src="/images/ChatGPT Image Aug 25, 2026, 06_46_28 PM.png" alt="ApexMoto&Co" style="height: 100px; width: auto;">
-            </a>
+            <div class="header-brand">
+                <a href="/" class="logo" style="display: flex; align-items: center; font-size: unset !important;">
+                    <img src="/images/ChatGPT Image Aug 25, 2026, 06_46_28 PM.png" alt="ApexMoto&Co" style="height: 100px; width: auto;">
+                </a>
+                <% if (isPublicPage === false) { %>
+                    <span class="admin-console-label">ADMIN CONSOLE</span>
+                <% } %>
+            </div>
 
             <button class="menu-toggle" id="mobile-menu" type="button" aria-label="Toggle navigation" aria-controls="site-navigation" aria-expanded="false" style="z-index: 2000; pointer-events: auto; position: relative;">
                 <span class="bar"></span>
@@ -54,20 +62,33 @@
             </button>
 
             <nav class="nav-links" id="site-navigation">
-                <a href="/store">Store</a>
-                <a href="/detailing">Detailing</a>
-                <a href="/services">Services</a>
-                <a href="/events">Events</a>
-                <a href="/contact">Contact Us</a>
-                <% if (user) { %>
-                    <% if (user.role === 'admin') { %>
-                        <a href="/admin" class="nav-btn" style="background: var(--warning); color: #000;">⚙️ Admin</a>
+                <% if (isPublicPage === false) { %>
+                    <a href="/admin" class="<%= currentPath === '/admin' ? 'is-active' : '' %>" aria-current="<%= currentPath === '/admin' ? 'page' : 'false' %>">Overview</a>
+                    <a href="/admin/detailing/bookings" class="<%= currentPath.startsWith('/admin/detailing') ? 'is-active' : '' %>" aria-current="<%= currentPath.startsWith('/admin/detailing') ? 'page' : 'false' %>">Bookings</a>
+                    <a href="/admin/announcements" class="<%= ['/admin/announcements', '/admin/events', '/admin/gallery'].includes(currentPath) ? 'is-active' : '' %>" aria-current="<%= ['/admin/announcements', '/admin/events', '/admin/gallery'].includes(currentPath) ? 'page' : 'false' %>">Content</a>
+                    <a href="/admin/marketing-assistant" class="<%= currentPath.startsWith('/admin/marketing') ? 'is-active' : '' %>" aria-current="<%= currentPath.startsWith('/admin/marketing') ? 'page' : 'false' %>">Marketing</a>
+                    <a href="/admin/users" class="<%= currentPath === '/admin/users' ? 'is-active' : '' %>" aria-current="<%= currentPath === '/admin/users' ? 'page' : 'false' %>">Users</a>
+                    <a href="/admin/settings" class="<%= currentPath === '/admin/settings' ? 'is-active' : '' %>" aria-current="<%= currentPath === '/admin/settings' ? 'page' : 'false' %>">Settings</a>
+                    <a href="/" class="admin-nav-site">View site</a>
+                    <% if (user) { %>
+                        <a href="/logout" class="admin-nav-logout">Sign out</a>
                     <% } %>
+                <% } else { %>
+                    <a href="/store">Store</a>
+                    <a href="/detailing">Detailing</a>
+                    <a href="/services">Services</a>
+                    <a href="/events">Events</a>
+                    <a href="/contact">Contact Us</a>
+                    <% if (user) { %>
+                        <% if (user.role === 'admin') { %>
+                            <a href="/admin" class="nav-btn" style="background: var(--warning); color: #000;">⚙️ Admin</a>
+                        <% } %>
                     <a href="/profile" class="nav-btn-alt">👤 Profile</a>
                     <a href="/logout" class="nav-btn-alt">Logout <%= user.username || user.email %></a>
-                <% } else { %>
-                    <a href="/login" class="nav-btn-alt">Log In</a>
-                    <a href="/register" class="nav-btn">Register</a>
+                    <% } else { %>
+                        <a href="/login" class="nav-btn-alt">Log In</a>
+                        <a href="/register" class="nav-btn">Register</a>
+                    <% } %>
                 <% } %>
             </nav>
         </div>
